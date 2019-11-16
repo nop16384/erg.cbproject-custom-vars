@@ -22,5 +22,4 @@ Documentation.
 
 ## 03 Screenshots
 
-![scr-002](https://github.com/earlgrey-bis/cb-OpenFilesListPlus/blob/doc/scr/screenshot-002.png "screenshot-002.png")
-
+![scr-002](https://github.com/earlgrey-bis/erg.cbproject-custom-vars/blob/doc/scr/cvars-19.11.16-002.png "screenshot-002.png")
