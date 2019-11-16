@@ -24,6 +24,11 @@ class wxKeyEvent;
 class wxPropertyGrid;
 class wxPropertyGridEvent;
 class wxUpdateUIEvent;
+//  ................................................................................................    ERG+
+class wxDataViewListCtrl;
+class wxDataViewListStore;
+class wxDataViewEvent;
+//  ................................................................................................    ERG-
 
 class CompilerOptionsDlg : public cbConfigurationPanel
 {
@@ -36,23 +41,28 @@ class CompilerOptionsDlg : public cbConfigurationPanel
         virtual void OnApply();
         virtual void OnCancel(){}
     private:
-        enum CustomVarActionType
-        {
-            CVA_Add,
-            CVA_Edit,
-            CVA_Remove
-        };
+        //  ........................................................................................    ERG+
+        //  ERG enum CustomVarActionType
+        //  ERG {
+        //  ERG     CVA_Add,
+        //  ERG     CVA_Edit,
+        //  ERG     CVA_Remove
+        //  ERG };
 
-        struct CustomVarAction
-        {
-            CustomVarActionType m_Action;
-            wxString            m_Key;
-            wxString            m_KeyValue;
-        };
+        //  ERG struct CustomVarAction
+        //  ERG {
+        //  ERG     CustomVarActionType m_Action;
+        //  ERG     wxString            m_Key;
+        //  ERG     wxString            m_KeyValue;
+        //  ERG };
+        //  ........................................................................................    ERG-
         void TextToOptions();
         void OptionsToText();
         void DoFillCompilerSets(int compilerIdx);
         void DoFillCompilerPrograms();
+        //  ........................................................................................    ERG+
+        void DvlsAddVar(wxString const& _i_key, wxString const& _i_val, bool _i_active);
+        //  ........................................................................................    ERG-
         void DoFillVars();
         void DoFillOthers();
         void DoFillOptions();
@@ -83,7 +93,11 @@ class CompilerOptionsDlg : public cbConfigurationPanel
         void OnClearDirClick(wxCommandEvent& event);
         void OnCopyDirsClick(wxCommandEvent& event);
         void OnAddVarClick(wxCommandEvent& event);
-        void OnEditVarClick(wxCommandEvent& event);
+        //  ........................................................................................    ERG+
+        //void OnEditVarClick(wxCommandEvent& event);
+        void OnBrowseVarClick(wxCommandEvent& event);
+        void OnChangedVarClick(wxDataViewEvent&);
+        //  ........................................................................................    ERG-
         void OnRemoveVarClick(wxCommandEvent& event);
         void OnClearVarClick(wxCommandEvent& event);
         void OnSetDefaultCompilerClick(wxCommandEvent& event);
@@ -125,12 +139,18 @@ class CompilerOptionsDlg : public cbConfigurationPanel
         wxArrayString                m_LinkLibs;
         wxArrayString                m_CompilerOptions;
         wxArrayString                m_ResourceCompilerOptions;
+        //  ........................................................................................    ERG+
+        wxDataViewListCtrl      *    d_dvlc;
+        wxDataViewListStore     *    d_dvls;
+        //  ........................................................................................    ERG-
         int                          m_CurrentCompilerIdx;
         cbProject*                   m_pProject;
         ProjectBuildTarget*          m_pTarget;
         bool                         m_bDirty;                       //!< true if a setting has changed since last save
         bool                         m_bFlagsDirty;                  //!< true if a flag (not its value) has changed since last save
-        std::vector<CustomVarAction> m_CustomVarActions;             //!< the actions carried out on the custom vars that need to be saved/applied
+        //  ........................................................................................    ERG+
+        //  ERG std::vector<CustomVarAction> m_CustomVarActions;             //!< the actions carried out on the custom vars that need to be saved/applied
+        //  ........................................................................................    ERG-
         wxString                     m_NewProjectOrTargetCompilerId; //!< keeps track of the changes of compiler of the selected project/target
 
         bool                         m_BuildingTree;                 //!< flag to ignore tree changing events while building it

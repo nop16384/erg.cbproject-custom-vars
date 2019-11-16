@@ -128,6 +128,12 @@ class DLLIMPORT CompileOptionsBase
         virtual bool HasVar(const wxString& key) const;
         virtual const wxString& GetVar(const wxString& key) const;
         virtual const StringHash& GetAllVars() const;
+        //  ........................................................................................    ERG+
+        virtual bool SetVarInactive(const wxString& _i_key, const wxString& _i_val);
+        virtual bool UnsetVarInactive(const wxString& _i_key);
+        virtual void UnsetAllVarsInactive();
+        virtual const StringHash& GetAllVarsInactive() const;
+        //  ........................................................................................    ERG-
     protected:
         int m_Platform;
         LinkerExecutableOption m_LinkerExecutable;
@@ -144,6 +150,7 @@ class DLLIMPORT CompileOptionsBase
         bool m_Modified;
         bool m_AlwaysRunPostCmds;
         StringHash m_Vars;
+        StringHash m_VarsInactive;
     private:
 };
 

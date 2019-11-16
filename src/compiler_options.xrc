@@ -971,6 +971,13 @@
 										<object class="wxPanel" name="tabVars">
 											<object class="wxBoxSizer">
 												<orient>wxVERTICAL</orient>
+                                                <!-- ...............................................    ERG+    -->
+                                                                                                    <!--
+                                                    This label is unuseful ; remove its sizer too ;
+                                                    anyway the sizer wont be created by the xrc
+                                                    subsystem since it contains nothing
+                                                                                                    -->
+                                                <!--
 												<object class="sizeritem">
 													<object class="wxStaticText" name="ID_STATICTEXT15">
 														<label>Variables:</label>
@@ -978,18 +985,37 @@
 													<flag>wxTOP|wxLEFT|wxRIGHT|wxEXPAND</flag>
 													<border>8</border>
 												</object>
-												<object class="sizeritem">
+                                                -->
+                                                                                                    <!--
+                                                    Remove lstVars ; remove its sizer too ;
+                                                    anyway the sizer wont be created by the xrc
+                                                    subsystem since it contains nothing. And
+                                                    wxDataViewListCtrl seems to be not still handled
+                                                    by xrc subsystem.
+                                                                                                    -->
+                                                <!--
+												<object class="sizeritem" name="szi__002">
 													<object class="wxListBox" name="lstVars" />
 													<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
 													<border>8</border>
 													<option>1</option>
+													<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
+													<border>8</border>
+													<option>1</option>
 												</object>
+                                                -->
+                                                <!-- ...............................................    ERG-    -->
 												<object class="sizeritem">
-													<object class="wxStaticText" name="ID_STATICTEXT16">
+                                                                                                    <!--
+                                                        ID_VAR_USE -> ID_USE_VARS because
+                                                        we need to look for it
+                                                                                                    -->
+													<object class="wxStaticText" name="ID_VAR_USE">
 														<label>These variables can be used in compiler and/or linker options.&#x0A;Use them as compiler/linker options this way: $(varname)</label>
 														<fg>#800000</fg>
 														<style>wxST_NO_AUTORESIZE</style>
 													</object>
+													<!-- <flag>wxLEFT|wxRIGHT|wxEXPAND</flag> -->
 													<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
 													<border>8</border>
 												</object>
@@ -1002,9 +1028,24 @@
 															<flag>wxRIGHT|wxALIGN_TOP</flag>
 															<border>8</border>
 														</object>
+                                                        <!-- .......................................    ERG+    -->
+                                                                                                    <!--
+                                                        Unuseful now, you can edit from the
+                                                        wxDataViewListCtrl. And the browse button is
+                                                        now a standalone button.
+                                                                                                    -->
+                                                        <!--
 														<object class="sizeritem">
 															<object class="wxButton" name="btnEditVar">
 																<label>&amp;Edit</label>
+															</object>
+															<flag>wxRIGHT|wxALIGN_TOP</flag>
+															<border>8</border>
+														</object>
+                                                        -->
+														<object class="sizeritem">
+															<object class="wxButton" name="btnBrowseVar">
+																<label>&amp;Browse</label>
 															</object>
 															<flag>wxRIGHT|wxALIGN_TOP</flag>
 															<border>8</border>
@@ -1018,10 +1059,11 @@
 														</object>
 														<object class="sizeritem">
 															<object class="wxButton" name="btnClearVar">
-																<label>&amp;Clear</label>
+																<label>Delete &amp;All</label>
 															</object>
 															<flag>wxALIGN_TOP</flag>
 														</object>
+                                                        <!-- .......................................    ERG-    -->
 													</object>
 													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL</flag>
 													<border>8</border>

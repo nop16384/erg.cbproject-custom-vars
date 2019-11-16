@@ -907,10 +907,23 @@ void ProjectLoader::DoEnvironment(TiXmlElement* parentNode, CompileOptionsBase* 
         TiXmlElement* child = node->FirstChildElement("Variable");
         while (child)
         {
-            wxString name  = cbC2U(child->Attribute("name"));
-            wxString value = cbC2U(child->Attribute("value"));
+            //  ....................................................................................    ERG+
+            //  ERG wxString name  = cbC2U(child->Attribute("name"));
+            //  ERG wxString value = cbC2U(child->Attribute("value"));
+            //  ERG if (!name.IsEmpty())
+            //  ERG     base->SetVar(name, UnixFilename(value));
+            //  active var <=> attribute "active" is present
+            wxString    name    = cbC2U(child->Attribute("name"));
+            wxString    value   = cbC2U(child->Attribute("value"));
+            bool        active  = ( child->Attribute("active") != NULL ) ? true : false;
             if (!name.IsEmpty())
-                base->SetVar(name, UnixFilename(value));
+            {
+                if ( active )
+                    base->SetVar(name, UnixFilename(value));
+                else
+                    base->SetVarInactive(name, UnixFilename(value));
+            }
+            //  ....................................................................................    ERG+
 
             child = child->NextSiblingElement("Variable");
         }
@@ -1203,22 +1216,45 @@ static void SaveEnvironment(TiXmlElement* parent, CompileOptionsBase* base)
 {
     if (!base)
         return;
-    const StringHash& v = base->GetAllVars();
-    if (v.empty())
-        return;
-
+    //  ............................................................................................    ERG+
+    //  ERG const StringHash& v = base->GetAllVars();
+    //  ERG if (v.empty())
+    //  ERG   return;
+    StringHash  const   &   v   =   base->GetAllVars();
+    StringHash  const   &   vi  =   base->GetAllVarsInactive();
+    //  ............................................................................................    ERG-
     // explicitly sort the keys
     typedef std::map<wxString, wxString> SortedMap;
     SortedMap map;
     for (StringHash::const_iterator it = v.begin(); it != v.end(); ++it)
         map[it->first] = it->second;
-
+    //  ............................................................................................    ERG+
+    SortedMap mapi;
+    for (StringHash::const_iterator it = vi.begin(); it != vi.end(); ++it)
+        mapi[it->first] = it->second;
+    //  ............................................................................................    ERG-
     TiXmlElement* node = AddElement(parent, "Environment");
+    //  ............................................................................................    ERG+
+    //  ERG for (SortedMap::const_iterator it = map.begin(); it != map.end(); ++it)
+    //  ERg {
+    //  ERG   TiXmlElement* elem = AddElement(node, "Variable", "name", it->first);
+    //  ERG   elem->SetAttribute("value", cbU2C(it->second));
+    //  ERG }
     for (SortedMap::const_iterator it = map.begin(); it != map.end(); ++it)
     {
         TiXmlElement* elem = AddElement(node, "Variable", "name", it->first);
         elem->SetAttribute("value", cbU2C(it->second));
+        //  active var <=> attribute "active" is present
+        elem->SetAttribute("active", "");
     }
+    for (SortedMap::const_iterator it = mapi.begin(); it != mapi.end(); ++it)
+    {
+        TiXmlElement* elem = AddElement(node, "Variable", "name", it->first);
+        elem->SetAttribute("value", cbU2C(it->second));
+        //  active var <=> attribute "active" is present
+        //elem->SetAttribute("inactive", "");
+    }
+    //  ............................................................................................    ERG-
 }
 
 bool ProjectLoader::Save(const wxString& filename)
