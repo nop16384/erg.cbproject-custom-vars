@@ -23,16 +23,18 @@ Documentation.
 
 ## 03 Screenshots
 
-![scr-002](https://github.com/earlgrey-bis/erg.cbproject-custom-vars/blob/doc/scr/cvars-19.11.16-002.png "screenshot-002.png")
+![scr-001](https://github.com/earlgrey-bis/erg.cbproject-custom-vars/blob/doc/scr/cvars-19.11.16-001.png "screenshot-001.png")
 ## 04 Tech
+### 04.01 Principle
 A StringHash named *m_VarsInactive* is added to the *CompileOptionsBase* class. This StringHash contains all inactive vars. The *m_Vars* member of *CompileOptionsBase* is said to hold the active vars.
 > CompileOptionsBase.h
 > `StringHash m_Vars;`
 > `StringHash m_VarsInactive;`
 
-
 The *CompilerOptionsDialog* class therefore get the active and inactive vars from *CompileOptionsBase*, let the user edit them together , and at the end separate them again in active and inactive vars.
 
-For the rest of C::B code, exception made of *ProjectLoader* class, which needs to load / save active and inactive vars, only active vars ( i.e. `CompileOptionsBase::m_Vars` ) exist.
+For the rest of C::B code, exception made of *ProjectLoader* class, which needs to load / save active and inactive vars, only active vars ( i.e. `CompileOptionsBase::m_Vars` ) exist, as before.
 
+### 04.02 UI changes
+* The "Edit" button has been removed, since the vars can be edited from inside the *wxDataViewListCtrl. *. The "browse" functionality remains, in a new "Browse" button that replace the "Edit" one.
 
