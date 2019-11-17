@@ -22,7 +22,7 @@ Documentation.
 
 ## 03 Screenshots
 
-![scr-002](https://github.com/earlgrey-bis/erg.cbproject-custom-vars/blob/doc/scr/cvars-19.11.16-002.png "screenshot-002.png")
+![scr-001](https://github.com/earlgrey-bis/erg.cbproject-custom-vars/blob/doc/scr/cvars-19.11.16-001.png "screenshot-001.png")
 ## 04 Tech
 ### 04.01 Principle
 A StringHash named *m_VarsInactive* is added to the *CompileOptionsBase* class. This StringHash contains all inactive vars. The *m_Vars* member of *CompileOptionsBase* is said to hold the active vars.
