@@ -94,7 +94,7 @@ class CompilerOptionsDlg : public cbConfigurationPanel
         void OnCopyDirsClick(wxCommandEvent& event);
         void OnAddVarClick(wxCommandEvent& event);
         //  ........................................................................................    ERG+
-        //void OnEditVarClick(wxCommandEvent& event);
+        //  ERG void OnEditVarClick(wxCommandEvent& event);
         void OnBrowseVarClick(wxCommandEvent& event);
         void OnChangedVarClick(wxDataViewEvent&);
         //  ........................................................................................    ERG-

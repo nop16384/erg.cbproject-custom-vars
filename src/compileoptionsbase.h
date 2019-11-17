@@ -150,7 +150,9 @@ class DLLIMPORT CompileOptionsBase
         bool m_Modified;
         bool m_AlwaysRunPostCmds;
         StringHash m_Vars;
+        //  ........................................................................................    ERG+
         StringHash m_VarsInactive;
+        //  ........................................................................................    ERG+
     private:
 };
 

@@ -149,7 +149,7 @@ BEGIN_EVENT_TABLE(CompilerOptionsDlg, wxPanel)
     EVT_BUTTON(                XRCID("btnMoveLibDown"),                 CompilerOptionsDlg::OnMoveLibDownClick)
     EVT_BUTTON(                XRCID("btnMoveDirUp"),                   CompilerOptionsDlg::OnMoveDirUpClick)
     EVT_BUTTON(                XRCID("btnMoveDirDown"),                 CompilerOptionsDlg::OnMoveDirDownClick)
-    EVT_BUTTON(                XRCID("btnAddVar"),                      CompilerOptionsDlg::OnAddVarClick)
+    EVT_BUTTON(                XRCID("btnNewVar"),                      CompilerOptionsDlg::OnAddVarClick)
     //  ............................................................................................    ERG+
     //  ERG EVT_BUTTON(                XRCID("btnEditVar"),                     CompilerOptionsDlg::OnEditVarClick)
     EVT_BUTTON(                XRCID("btnBrowseVar"),                   CompilerOptionsDlg::OnBrowseVarClick)
@@ -266,7 +266,7 @@ CompilerOptionsDlg::CompilerOptionsDlg(wxWindow* parent, CompilerGCC* compiler, 
     d_dvlc->AssociateModel(d_dvls);
 
     wxDataViewRenderer  *   dvr0    =   new wxDataViewToggleRenderer(wxString("bool"), wxDATAVIEW_CELL_ACTIVATABLE , wxDVR_DEFAULT_ALIGNMENT );
-    wxDataViewColumn    *   dvc0    =   new wxDataViewColumn(wxString("Set")    , dvr0, 0,  75, wxALIGN_CENTER, wxDATAVIEW_COL_RESIZABLE );
+    wxDataViewColumn    *   dvc0    =   new wxDataViewColumn(wxString("Set")    , dvr0, 0,  75, wxALIGN_CENTER, colflags );
 
     wxDataViewRenderer  *   dvr1    =   new wxDataViewTextRenderer(wxString("string"), wxDATAVIEW_CELL_EDITABLE , wxDVR_DEFAULT_ALIGNMENT );
     wxDataViewColumn    *   dvc1    =   new wxDataViewColumn(wxString("Key")    , dvr1, 1, 150, wxALIGN_LEFT, colflags);
@@ -280,7 +280,7 @@ CompilerOptionsDlg::CompilerOptionsDlg(wxWindow* parent, CompilerGCC* compiler, 
 
     wxXmlResource::Get()->AttachUnknownControl(wxT("ErgCustomVars"), d_dvlc);
 
-    sizerflags.Expand().Proportion(1);
+    sizerflags.Expand().Proportion(1);  // sizeritem for ID_STATICTEXT16 "These variables... " has wxEXPAND so we need to set Proportion
     bsz->Insert(idx, d_dvlc, sizerflags);
 
     Bind(wxEVT_DATAVIEW_ITEM_VALUE_CHANGED, &CompilerOptionsDlg::OnChangedVarClick, this);
@@ -2231,7 +2231,6 @@ void CompilerOptionsDlg::OnClearVarClick(cb_unused wxCommandEvent& event)
         //  ERG }
         //  ERG lstVars->Clear();
         d_dvlc->DeleteAllItems();                                                                   // this will update the wxDataViewListStore too
-        d_dvls->DeleteAllItems();
         m_bDirty = true;
     }
     //  ............................................................................................    ERG-
@@ -3043,7 +3042,7 @@ void CompilerOptionsDlg::OnMyCharHook(wxKeyEvent& event)
 
     const wxChar* str_libs[4] = { _T("btnEditLib"),  _T("btnAddLib"),  _T("btnDelLib"),     _T("btnClearLib")   };
     const wxChar* str_dirs[4] = { _T("btnEditDir"),  _T("btnAddDir"),  _T("btnDelDir"),     _T("btnClearDir")   };
-    const wxChar* str_vars[4] = { _T("btnEditVar"),  _T("btnAddVar"),  _T("btnDeleteVar"),  _T("btnClearVar")   };
+    const wxChar* str_vars[4] = { _T("btnEditVar"),  _T("btnNewVar"),  _T("btnDeleteVar"),  _T("btnClearVar")   };
     const wxChar* str_xtra[4] = { _T("btnExtraEdit"),_T("btnExtraAdd"),_T("btnExtraDelete"),_T("btnExtraClear") };
 
     if (keycode == WXK_RETURN || keycode == WXK_NUMPAD_ENTER)

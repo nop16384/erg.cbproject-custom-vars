@@ -989,9 +989,7 @@
                                                                                                     <!--
                                                     Remove lstVars ; remove its sizer too ;
                                                     anyway the sizer wont be created by the xrc
-                                                    subsystem since it contains nothing. And
-                                                    wxDataViewListCtrl seems to be not still handled
-                                                    by xrc subsystem.
+                                                    subsystem since it contains nothing.
                                                                                                     -->
                                                 <!--
 												<object class="sizeritem" name="szi__002">
@@ -1006,24 +1004,19 @@
                                                 -->
                                                 <!-- ...............................................    ERG-    -->
 												<object class="sizeritem">
-                                                                                                    <!--
-                                                        ID_VAR_USE -> ID_USE_VARS because
-                                                        we need to look for it
-                                                                                                    -->
-													<object class="wxStaticText" name="ID_VAR_USE">
+													<object class="wxStaticText" name="ID_STATICTEXT16">
 														<label>These variables can be used in compiler and/or linker options.&#x0A;Use them as compiler/linker options this way: $(varname)</label>
 														<fg>#800000</fg>
 														<style>wxST_NO_AUTORESIZE</style>
 													</object>
-													<!-- <flag>wxLEFT|wxRIGHT|wxEXPAND</flag> -->
 													<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
 													<border>8</border>
 												</object>
 												<object class="sizeritem">
 													<object class="wxBoxSizer">
 														<object class="sizeritem">
-															<object class="wxButton" name="btnAddVar">
-																<label>&amp;Add</label>
+															<object class="wxButton" name="btnNewVar">
+																<label>&amp;New</label>
 															</object>
 															<flag>wxRIGHT|wxALIGN_TOP</flag>
 															<border>8</border>

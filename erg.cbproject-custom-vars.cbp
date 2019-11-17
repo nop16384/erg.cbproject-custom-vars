@@ -5,9 +5,9 @@
 		<Option title="erg.cbproject-custom-vars" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="src/;" />
+		<Option virtualFolders="src/;notes/;build/;build/lx/;" />
 		<Build>
-			<Target title="dev">
+			<Target title="lx-dev">
 				<Option output="bin/D/erg" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/D/" />
 				<Option type="1" />
@@ -15,8 +15,12 @@
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
+				<ExtraCommands>
+					<Add before="chmod u=rwx build/lx/build.bash" />
+					<Add before="./build/lx/build.bash $(PROJECT_DIR) dev $(CB_CVARS__CB_TRUNK_DIR) $(CB_CVARS__CB_SVN_VERSION) $(CB_CVARS__GIT_VERSION)" />
+				</ExtraCommands>
 			</Target>
-			<Target title="pub">
+			<Target title="lx-pub">
 				<Option output="bin/D/erg" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/D/" />
 				<Option type="1" />
@@ -24,11 +28,41 @@
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
+				<ExtraCommands>
+					<Add before="chmod u=rwx build/lx/build.bash" />
+					<Add before="./build/lx/build.bash $(PROJECT_DIR) pub $(CB_CVARS__CB_TRUNK_DIR) $(CB_CVARS__CB_SVN_VERSION) $(CB_CVARS__GIT_VERSION)" />
+				</ExtraCommands>
 			</Target>
+			<Environment>
+				<Variable name="CB_CVARS__CB_SVN_VERSION" value="" />
+				<Variable name="CB_CVARS__CB_TRUNK_DIR" value="" />
+				<Variable name="CB_CVARS__GIT_VERSION" value="v-01.01.002" />
+			</Environment>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="build/lx/build.bash">
+			<Option virtualFolder="build/lx/" />
+		</Unit>
+		<Unit filename="build/lx/build.config.bash">
+			<Option virtualFolder="build/lx/" />
+		</Unit>
+		<Unit filename="build/lx/build.dev.bash">
+			<Option virtualFolder="build/lx/" />
+		</Unit>
+		<Unit filename="build/lx/build.pub.bash">
+			<Option virtualFolder="build/lx/" />
+		</Unit>
+		<Unit filename="build/lx/erg.cb-cvars--apply-patches.bash">
+			<Option virtualFolder="build/lx/" />
+		</Unit>
+		<Unit filename="notes/changelog.h">
+			<Option virtualFolder="notes/" />
+		</Unit>
+		<Unit filename="notes/todo.h">
+			<Option virtualFolder="notes/" />
+		</Unit>
 		<Unit filename="src/compileoptionsbase.cpp">
 			<Option compile="0" />
 			<Option link="0" />
