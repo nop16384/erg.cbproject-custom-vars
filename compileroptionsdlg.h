@@ -44,7 +44,7 @@ class CompilerOptionsDlg : public cbConfigurationPanel
         void OptionsToText();
         void DoFillCompilerSets(int compilerIdx);
         void DoFillCompilerPrograms();
-        void DvlsAddVar(wxString const& _i_key, wxString const& _i_val, bool _i_active);
+        void WxModelAddVarHelper(wxString const& _i_key, wxString const& _i_val, bool _i_active);
         void DoFillVars();
         void DoFillOthers();
         void DoFillOptions();
@@ -76,7 +76,7 @@ class CompilerOptionsDlg : public cbConfigurationPanel
         void OnCopyDirsClick(wxCommandEvent& event);
         void OnAddVarClick(wxCommandEvent& event);
         void OnBrowseVarClick(wxCommandEvent& event);
-        void OnChangedVarClick(wxDataViewEvent&);
+        void OnChangedVarClick(wxDataViewEvent&);                                   //!< a variable was edited from within the wxDataViewListCtrl
         void OnRemoveVarClick(wxCommandEvent& event);
         void OnClearVarClick(wxCommandEvent& event);
         void OnSetDefaultCompilerClick(wxCommandEvent& event);
@@ -118,8 +118,8 @@ class CompilerOptionsDlg : public cbConfigurationPanel
         wxArrayString                m_LinkLibs;
         wxArrayString                m_CompilerOptions;
         wxArrayString                m_ResourceCompilerOptions;
-        wxDataViewListCtrl      *    d_dvlc;
-        wxDataViewListStore     *    d_dvls;
+        wxDataViewListCtrl      *    m_VarsWxCtrl;
+        wxDataViewListStore     *    m_VarsWxModel;
         int                          m_CurrentCompilerIdx;
         cbProject*                   m_pProject;
         ProjectBuildTarget*          m_pTarget;

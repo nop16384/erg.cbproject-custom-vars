@@ -1,5 +1,5 @@
 --- src/sdk/projectloader.cpp	2019-11-17 10:20:40.370017520 +0100
-+++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/projectloader.cpp	2019-11-17 20:36:17.607890660 +0100
++++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/projectloader.cpp	2019-11-22 06:24:37.350328440 +0100
 @@ -4,7 +4,7 @@
   *
   * $Revision: 11906 $

@@ -1,5 +1,5 @@
 --- src/plugins/compilergcc/compileroptionsdlg.h	2019-11-17 10:20:39.298021367 +0100
-+++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/compileroptionsdlg.h	2019-11-17 20:36:17.591890610 +0100
++++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/compileroptionsdlg.h	2019-11-22 06:24:37.358328444 +0100
 @@ -24,6 +24,9 @@
  class wxPropertyGrid;
  class wxPropertyGridEvent;
@@ -32,7 +32,7 @@
          void OptionsToText();
          void DoFillCompilerSets(int compilerIdx);
          void DoFillCompilerPrograms();
-+        void DvlsAddVar(wxString const& _i_key, wxString const& _i_val, bool _i_active);
++        void WxModelAddVarHelper(wxString const& _i_key, wxString const& _i_val, bool _i_active);
          void DoFillVars();
          void DoFillOthers();
          void DoFillOptions();
@@ -42,7 +42,7 @@
          void OnAddVarClick(wxCommandEvent& event);
 -        void OnEditVarClick(wxCommandEvent& event);
 +        void OnBrowseVarClick(wxCommandEvent& event);
-+        void OnChangedVarClick(wxDataViewEvent&);
++        void OnChangedVarClick(wxDataViewEvent&);                                   //!< a variable was edited from within the wxDataViewListCtrl
          void OnRemoveVarClick(wxCommandEvent& event);
          void OnClearVarClick(wxCommandEvent& event);
          void OnSetDefaultCompilerClick(wxCommandEvent& event);
@@ -50,8 +50,8 @@
          wxArrayString                m_LinkLibs;
          wxArrayString                m_CompilerOptions;
          wxArrayString                m_ResourceCompilerOptions;
-+        wxDataViewListCtrl      *    d_dvlc;
-+        wxDataViewListStore     *    d_dvls;
++        wxDataViewListCtrl      *    m_VarsWxCtrl;
++        wxDataViewListStore     *    m_VarsWxModel;
          int                          m_CurrentCompilerIdx;
          cbProject*                   m_pProject;
          ProjectBuildTarget*          m_pTarget;

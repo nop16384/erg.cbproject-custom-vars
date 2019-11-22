@@ -1,10 +1,10 @@
 --- src/sdk/compileoptionsbase.cpp	2019-11-17 10:20:40.370017520 +0100
-+++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/compileoptionsbase.cpp	2019-11-17 20:36:17.587890596 +0100
++++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/compileoptionsbase.cpp	2019-11-22 06:24:37.342328437 +0100
 @@ -550,6 +550,7 @@
  
  void CompileOptionsBase::UnsetAllVars()
  {
-+    SetModified(true);                                                                              // _ERG_BCOR_ added, was missing
++    SetModified(true);                                                                              // _ERG_CORR_ added, was missing
      m_Vars.clear();
  }
  
