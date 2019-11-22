@@ -1,10 +1,14 @@
---- src/sdk/projectloader.cpp	2019-11-17 10:20:40.370017520 +0100
-+++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/projectloader.cpp	2019-11-17 20:36:17.607890660 +0100
-@@ -4,7 +4,7 @@
+--- src/sdk/projectloader.cpp	2019-11-21 19:02:13.246456308 +0100
++++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/projectloader.cpp	2019-11-22 21:37:39.059631875 +0100
+@@ -2,9 +2,9 @@
+  * This file is part of the Code::Blocks IDE and licensed under the GNU Lesser General Public License, version 3
+  * http://www.gnu.org/licenses/lgpl-3.0.html
   *
-  * $Revision: 11906 $
-  * $Id: projectloader.cpp 11906 2019-11-09 12:05:35Z fuscated $
-- * $HeadURL: svn://svn.code.sf.net/p/codeblocks/code/trunk/src/sdk/projectloader.cpp $
+- * $Revision$
+- * $Id$
+- * $HeadURL$
++ * $Revision: 11906 $
++ * $Id: projectloader.cpp 11906 2019-11-09 12:05:35Z fuscated $
 + * $HeadURL: file:///svn/p/codeblocks/code/trunk/src/sdk/projectloader.cpp $
   */
  

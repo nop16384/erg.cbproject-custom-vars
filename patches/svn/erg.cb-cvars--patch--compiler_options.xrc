@@ -1,0 +1,53 @@
+--- src/plugins/compilergcc/resources/compiler_options.xrc	2019-11-17 10:20:39.246021554 +0100
++++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/compiler_options.xrc	2019-11-22 21:37:39.087631842 +0100
+@@ -972,19 +972,6 @@
+ 											<object class="wxBoxSizer">
+ 												<orient>wxVERTICAL</orient>
+ 												<object class="sizeritem">
+-													<object class="wxStaticText" name="ID_STATICTEXT15">
+-														<label>Variables:</label>
+-													</object>
+-													<flag>wxTOP|wxLEFT|wxRIGHT|wxEXPAND</flag>
+-													<border>8</border>
+-												</object>
+-												<object class="sizeritem">
+-													<object class="wxListBox" name="lstVars" />
+-													<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
+-													<border>8</border>
+-													<option>1</option>
+-												</object>
+-												<object class="sizeritem">
+ 													<object class="wxStaticText" name="ID_STATICTEXT16">
+ 														<label>These variables can be used in compiler and/or linker options.&#x0A;Use them as compiler/linker options this way: $(varname)</label>
+ 														<fg>#800000</fg>
+@@ -996,15 +983,15 @@
+ 												<object class="sizeritem">
+ 													<object class="wxBoxSizer">
+ 														<object class="sizeritem">
+-															<object class="wxButton" name="btnAddVar">
+-																<label>&amp;Add</label>
++															<object class="wxButton" name="btnNewVar">
++																<label>&amp;New</label>
+ 															</object>
+ 															<flag>wxRIGHT|wxALIGN_TOP</flag>
+ 															<border>8</border>
+ 														</object>
+ 														<object class="sizeritem">
+-															<object class="wxButton" name="btnEditVar">
+-																<label>&amp;Edit</label>
++															<object class="wxButton" name="btnBrowseVar">
++																<label>&amp;Browse</label>
+ 															</object>
+ 															<flag>wxRIGHT|wxALIGN_TOP</flag>
+ 															<border>8</border>
+@@ -1017,8 +1004,8 @@
+ 															<border>8</border>
+ 														</object>
+ 														<object class="sizeritem">
+-															<object class="wxButton" name="btnClearVar">
+-																<label>&amp;Clear</label>
++															<object class="wxButton" name="btnDeleteAllVars">
++																<label>Delete &amp;All</label>
+ 															</object>
+ 															<flag>wxALIGN_TOP</flag>
+ 														</object>
