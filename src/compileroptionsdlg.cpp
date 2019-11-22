@@ -73,7 +73,7 @@ BEGIN_EVENT_TABLE(CompilerOptionsDlg, wxPanel)
     EVT_UPDATE_UI(            XRCID("btnBrowseVar"),                    CompilerOptionsDlg::OnUpdateUI)
     //  ................................................................................................    ERG-
     EVT_UPDATE_UI(            XRCID("btnDeleteVar"),                    CompilerOptionsDlg::OnUpdateUI)
-    EVT_UPDATE_UI(            XRCID("btnClearVar"),                     CompilerOptionsDlg::OnUpdateUI)
+    EVT_UPDATE_UI(            XRCID("btnDeleteAllVars"),                CompilerOptionsDlg::OnUpdateUI)
     EVT_UPDATE_UI(            XRCID("cmbCompilerPolicy"),               CompilerOptionsDlg::OnUpdateUI)
     EVT_UPDATE_UI(            XRCID("cmbLinkerPolicy"),                 CompilerOptionsDlg::OnUpdateUI)
     EVT_UPDATE_UI(            XRCID("cmbIncludesPolicy"),               CompilerOptionsDlg::OnUpdateUI)
@@ -153,9 +153,9 @@ BEGIN_EVENT_TABLE(CompilerOptionsDlg, wxPanel)
     //  ............................................................................................    ERG+
     //  ERG EVT_BUTTON(                XRCID("btnEditVar"),                     CompilerOptionsDlg::OnEditVarClick)
     EVT_BUTTON(                XRCID("btnBrowseVar"),                   CompilerOptionsDlg::OnBrowseVarClick)
-    //  ............................................................................................    ERG+
+    //  ............................................................................................    ERG-
     EVT_BUTTON(                XRCID("btnDeleteVar"),                   CompilerOptionsDlg::OnRemoveVarClick)
-    EVT_BUTTON(                XRCID("btnClearVar"),                    CompilerOptionsDlg::OnClearVarClick)
+    EVT_BUTTON(                XRCID("btnDeleteAllVars"),               CompilerOptionsDlg::OnDeleteAllVarsClick)
     EVT_BUTTON(                XRCID("btnMasterPath"),                  CompilerOptionsDlg::OnMasterPathClick)
     EVT_BUTTON(                XRCID("btnAutoDetect"),                  CompilerOptionsDlg::OnAutoDetectClick)
     EVT_BUTTON(                XRCID("btnCcompiler"),                   CompilerOptionsDlg::OnSelectProgramClick)
@@ -261,9 +261,9 @@ CompilerOptionsDlg::CompilerOptionsDlg(wxWindow* parent, CompilerGCC* compiler, 
     int             colflags    = wxDATAVIEW_COL_RESIZABLE | wxDATAVIEW_COL_SORTABLE;
     size_t          idx         =   0;
 
-    d_dvlc  =   new wxDataViewListCtrl  (w1, wxID_ANY);
-    d_dvls  =   new wxDataViewListStore ();
-    d_dvlc->AssociateModel(d_dvls);
+    m_VarsWxCtrl    =   new wxDataViewListCtrl  (w1, wxID_ANY);
+    m_VarsWxModel   =   new wxDataViewListStore ();
+    m_VarsWxCtrl->AssociateModel(m_VarsWxModel);
 
     wxDataViewRenderer  *   dvr0    =   new wxDataViewToggleRenderer(wxString("bool"), wxDATAVIEW_CELL_ACTIVATABLE , wxDVR_DEFAULT_ALIGNMENT );
     wxDataViewColumn    *   dvc0    =   new wxDataViewColumn(wxString("Set")    , dvr0, 0,  75, wxALIGN_CENTER, colflags );
@@ -274,14 +274,14 @@ CompilerOptionsDlg::CompilerOptionsDlg(wxWindow* parent, CompilerGCC* compiler, 
     wxDataViewRenderer  *   dvr2    =   new wxDataViewTextRenderer(wxString("string"), wxDATAVIEW_CELL_EDITABLE , wxDVR_DEFAULT_ALIGNMENT );
     wxDataViewColumn    *   dvc2    =   new wxDataViewColumn(wxString("Value")  , dvr2, 2,  80, wxALIGN_LEFT, colflags);
 
-    d_dvlc->AppendColumn(dvc0);
-    d_dvlc->AppendColumn(dvc1);
-    d_dvlc->AppendColumn(dvc2);
+    m_VarsWxCtrl->AppendColumn(dvc0);
+    m_VarsWxCtrl->AppendColumn(dvc1);
+    m_VarsWxCtrl->AppendColumn(dvc2);
 
-    wxXmlResource::Get()->AttachUnknownControl(wxT("ErgCustomVars"), d_dvlc);
+    wxXmlResource::Get()->AttachUnknownControl(wxT("ErgCustomVars"), m_VarsWxCtrl);
 
     sizerflags.Expand().Proportion(1);  // sizeritem for ID_STATICTEXT16 "These variables... " has wxEXPAND so we need to set Proportion
-    bsz->Insert(idx, d_dvlc, sizerflags);
+    bsz->Insert(idx, m_VarsWxCtrl, sizerflags);
 
     Bind(wxEVT_DATAVIEW_ITEM_VALUE_CHANGED, &CompilerOptionsDlg::OnChangedVarClick, this);
     //  ............................................................................................    ERG-
@@ -555,7 +555,7 @@ void CompilerOptionsDlg::DoFillCompilerPrograms()
 } // DoFillCompilerPrograms
 
 //  ................................................................................................    ERG+
-void CompilerOptionsDlg::DvlsAddVar(wxString const& _i_key, wxString const& _i_val, bool _i_active)
+void CompilerOptionsDlg::WxModelAddVarHelper(wxString const& _i_key, wxString const& _i_val, bool _i_active)
 {
     wxVector<wxVariant>     row;
     //  ............................................................................................
@@ -563,7 +563,7 @@ void CompilerOptionsDlg::DvlsAddVar(wxString const& _i_key, wxString const& _i_v
     row.push_back( wxVariant(_i_key)    );
     row.push_back( wxVariant(_i_val)    );
 
-    d_dvls->AppendItem(row);
+    m_VarsWxModel->AppendItem(row);
 }
 //  ................................................................................................    ERG-
 void CompilerOptionsDlg::DoFillVars()
@@ -572,17 +572,19 @@ void CompilerOptionsDlg::DoFillVars()
     const StringHash            *   vi      =   0;
     const CompileOptionsBase    *   base    =   GetVarsOwner();
     //  ............................................................................................
-    if ( ! base )               return;
+    if ( ! base )
+        return;
 
     va  =   &base->GetAllVars();
     vi  =   &base->GetAllVarsInactive();
-    if ( ( ! va ) || ( ! vi ) ) return;
+    if ( ( ! va ) || ( ! vi ) )
+        return;
 
     for (StringHash::const_iterator it = va->begin(); it != va->end(); ++it)
-        DvlsAddVar(it->first, it->second, true);
+        WxModelAddVarHelper(it->first, it->second, true);
 
     for (StringHash::const_iterator it = vi->begin(); it != vi->end(); ++it)
-        DvlsAddVar(it->first, it->second, false);
+        WxModelAddVarHelper(it->first, it->second, false);
     //  ............................................................................................    ERG+
     //  ERG wxListBox* lst = XRCCTRL(*this, "lstVars", wxListBox);
     //  ERG     if (!lst)
@@ -1220,17 +1222,18 @@ void CompilerOptionsDlg::DoSaveVars()
 {
     CompileOptionsBase  *   base    =   GetVarsOwner();
     //  ............................................................................................
-    if ( ! base )               return;
+    if ( ! base )
+        return;
 
     base->UnsetAllVars();
     base->UnsetAllVarsInactive();
 
-    for ( unsigned int ridx = 0 ; ridx != d_dvls->GetItemCount() ; ridx++ )
+    for ( unsigned int ridx = 0 ; ridx != m_VarsWxModel->GetItemCount() ; ridx++ )
     {
         wxVariant   va, vk, vv;
-        d_dvls->GetValueByRow(va, ridx, 0);
-        d_dvls->GetValueByRow(vk, ridx, 1);
-        d_dvls->GetValueByRow(vv, ridx, 2);
+        m_VarsWxModel->GetValueByRow(va, ridx, 0);
+        m_VarsWxModel->GetValueByRow(vk, ridx, 1);
+        m_VarsWxModel->GetValueByRow(vv, ridx, 2);
 
         bool        active  = va.GetBool();
         wxString    key     = vk.GetString().Trim(true).Trim(false);
@@ -2128,7 +2131,7 @@ void CompilerOptionsDlg::OnAddVarClick(cb_unused wxCommandEvent& event)
         //  ERG m_CustomVarActions.push_back(Action);
         //  ERG XRCCTRL(*this, "lstVars", wxListBox)->Append(key + _T(" = ") + value, new VariableListClientData(key, value));
         //  ........................................................................................    ERG-
-        DvlsAddVar(key, value ,true);
+        WxModelAddVarHelper(key, value ,true);
         m_bDirty = true;
     }
 } // OnAddVarClick
@@ -2167,12 +2170,14 @@ void CompilerOptionsDlg::OnAddVarClick(cb_unused wxCommandEvent& event)
 void CompilerOptionsDlg::OnBrowseVarClick(cb_unused wxCommandEvent& event)
 {
     wxString dir = ChooseDirectory(this);
-    if ( dir.IsEmpty() )        return;
+    if ( dir.IsEmpty() )
+        return;
 
-    int sel = d_dvlc->GetSelectedRow();
-    if ( sel == wxNOT_FOUND )   return;                                                             // should not happend cf OnUpdateUI()
+    int sel = m_VarsWxCtrl->GetSelectedRow();
+    if ( sel == wxNOT_FOUND )                                                                       // should not happend cf OnUpdateUI()
+        return;
 
-    d_dvlc->SetTextValue(dir, sel, 2);                                                              // this will update the wxDataViewListStore too
+    m_VarsWxCtrl->SetTextValue(dir, sel, 2);                                                        // this will update the wxDataViewListStore too
 
     m_bDirty = true;
 }
@@ -2193,8 +2198,9 @@ void CompilerOptionsDlg::OnRemoveVarClick(cb_unused wxCommandEvent& event)
     //  ERG if (key.IsEmpty())
     //  ERG     return;
 
-    int sel = d_dvlc->GetSelectedRow();
-    if ( sel == wxNOT_FOUND )   return;                                                             // should not happend cf OnUpdateUI()
+    int sel = m_VarsWxCtrl->GetSelectedRow();
+    if ( sel == wxNOT_FOUND )                                                                       // should not happend cf OnUpdateUI()
+        return;
 
     if (cbMessageBox(_("Are you sure you want to delete this variable?"),
                     _("Confirmation"),
@@ -2203,13 +2209,13 @@ void CompilerOptionsDlg::OnRemoveVarClick(cb_unused wxCommandEvent& event)
         //  ERG CustomVarAction Action = {CVA_Remove, key, wxEmptyString};
         //  ERG m_CustomVarActions.push_back(Action);
         //  ERG list->Delete(sel);
-        d_dvlc->DeleteItem(sel);                                                                    // this will update the wxDataViewListStore too
+        m_VarsWxCtrl->DeleteItem(sel);                                                              // this will update the wxDataViewListStore too
         m_bDirty = true;
     }
     //  ............................................................................................    ERG+
 } // OnRemoveVarClick
 
-void CompilerOptionsDlg::OnClearVarClick(cb_unused wxCommandEvent& event)
+void CompilerOptionsDlg::OnDeleteAllVarsClick(cb_unused wxCommandEvent& event)
 {
     //  ............................................................................................    ERG+
     //  ERG wxListBox* lstVars = XRCCTRL(*this, "lstVars", wxListBox);
@@ -2230,11 +2236,11 @@ void CompilerOptionsDlg::OnClearVarClick(cb_unused wxCommandEvent& event)
         //  ERG     }
         //  ERG }
         //  ERG lstVars->Clear();
-        d_dvlc->DeleteAllItems();                                                                   // this will update the wxDataViewListStore too
+        m_VarsWxCtrl->DeleteAllItems();                                                             // this will update the wxDataViewListStore too
         m_bDirty = true;
     }
     //  ............................................................................................    ERG-
-} // OnClearVarClick
+} // OnDeleteAllVarsClick
 
 void CompilerOptionsDlg::OnSetDefaultCompilerClick(cb_unused wxCommandEvent& event)
 {
@@ -2904,11 +2910,11 @@ void CompilerOptionsDlg::OnUpdateUI(cb_unused wxUpdateUIEvent& event)
     //  ERG     XRCCTRL(*this, "btnClearVar",  wxButton)->Enable(XRCCTRL(*this, "lstVars", wxListBox)->GetCount() != 0);
 
     // add/browse/delete/clear vars
-    en = ( d_dvlc->GetSelectedItemsCount() > 0 );
-    XRCCTRL(*this, "btnBrowseVar"   , wxButton)->Enable(en);
-    XRCCTRL(*this, "btnDeleteVar"   , wxButton)->Enable(en);
-    en = ( d_dvls->GetItemCount() > 0 );
-    XRCCTRL(*this, "btnClearVar"    , wxButton)->Enable(en);
+    en = ( m_VarsWxCtrl->GetSelectedItemsCount() > 0 );
+    XRCCTRL(*this, "btnBrowseVar"       , wxButton)->Enable(en);
+    XRCCTRL(*this, "btnDeleteVar"       , wxButton)->Enable(en);
+    en = ( m_VarsWxModel->GetItemCount() > 0 );
+    XRCCTRL(*this, "btnDeleteAllVars"   , wxButton)->Enable(en);
     //  ............................................................................................    ERG+
     // policies
     wxTreeCtrl* tc = XRCCTRL(*this, "tcScope", wxTreeCtrl);
@@ -3042,7 +3048,7 @@ void CompilerOptionsDlg::OnMyCharHook(wxKeyEvent& event)
 
     const wxChar* str_libs[4] = { _T("btnEditLib"),  _T("btnAddLib"),  _T("btnDelLib"),     _T("btnClearLib")   };
     const wxChar* str_dirs[4] = { _T("btnEditDir"),  _T("btnAddDir"),  _T("btnDelDir"),     _T("btnClearDir")   };
-    const wxChar* str_vars[4] = { _T("btnEditVar"),  _T("btnNewVar"),  _T("btnDeleteVar"),  _T("btnClearVar")   };
+    const wxChar* str_vars[4] = { _T("btnEditVar"),  _T("btnNewVar"),  _T("btnDeleteVar"),  _T("btnDeleteAllVars")   };
     const wxChar* str_xtra[4] = { _T("btnExtraEdit"),_T("btnExtraAdd"),_T("btnExtraDelete"),_T("btnExtraClear") };
 
     if (keycode == WXK_RETURN || keycode == WXK_NUMPAD_ENTER)
@@ -3061,7 +3067,7 @@ void CompilerOptionsDlg::OnMyCharHook(wxKeyEvent& event)
         { myid =  wxXmlResource::GetXRCID(str_libs[myidx]); }
     else if (id == XRCID("lstIncludeDirs") || id == XRCID("lstLibDirs") || id == XRCID("lstResDirs")) // Directories
         { myid =  wxXmlResource::GetXRCID(str_dirs[myidx]); }
-    else if (id == XRCID("lstVars")) // Custom Vars                                                 // __ERG_TODO__ btnEditVar was deleted !
+    else if (id == XRCID("lstVars")) // Custom Vars                                                 // _ERG_TODO_ btnEditVar was deleted !
     { myid =  wxXmlResource::GetXRCID(str_vars[myidx]); }
     else if (id == XRCID("lstExtraPaths")) // Extra Paths
         { myid =  wxXmlResource::GetXRCID(str_xtra[myidx]); }

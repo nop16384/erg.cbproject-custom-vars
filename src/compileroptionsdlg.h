@@ -61,7 +61,7 @@ class CompilerOptionsDlg : public cbConfigurationPanel
         void DoFillCompilerSets(int compilerIdx);
         void DoFillCompilerPrograms();
         //  ........................................................................................    ERG+
-        void DvlsAddVar(wxString const& _i_key, wxString const& _i_val, bool _i_active);
+        void WxModelAddVarHelper(wxString const& _i_key, wxString const& _i_val, bool _i_active);
         //  ........................................................................................    ERG-
         void DoFillVars();
         void DoFillOthers();
@@ -96,10 +96,10 @@ class CompilerOptionsDlg : public cbConfigurationPanel
         //  ........................................................................................    ERG+
         //  ERG void OnEditVarClick(wxCommandEvent& event);
         void OnBrowseVarClick(wxCommandEvent& event);
-        void OnChangedVarClick(wxDataViewEvent&);
+        void OnChangedVarClick(wxDataViewEvent&);                                   //!< a variable was edited from within the wxDataViewListCtrl
         //  ........................................................................................    ERG-
         void OnRemoveVarClick(wxCommandEvent& event);
-        void OnClearVarClick(wxCommandEvent& event);
+        void OnDeleteAllVarsClick(wxCommandEvent& event);
         void OnSetDefaultCompilerClick(wxCommandEvent& event);
         void OnAddCompilerClick(wxCommandEvent& event);
         void OnEditCompilerClick(wxCommandEvent& event);
@@ -140,8 +140,8 @@ class CompilerOptionsDlg : public cbConfigurationPanel
         wxArrayString                m_CompilerOptions;
         wxArrayString                m_ResourceCompilerOptions;
         //  ........................................................................................    ERG+
-        wxDataViewListCtrl      *    d_dvlc;
-        wxDataViewListStore     *    d_dvls;
+        wxDataViewListCtrl      *    m_VarsWxCtrl;
+        wxDataViewListStore     *    m_VarsWxModel;
         //  ........................................................................................    ERG-
         int                          m_CurrentCompilerIdx;
         cbProject*                   m_pProject;

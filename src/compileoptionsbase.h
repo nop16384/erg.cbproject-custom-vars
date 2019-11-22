@@ -129,10 +129,10 @@ class DLLIMPORT CompileOptionsBase
         virtual const wxString& GetVar(const wxString& key) const;
         virtual const StringHash& GetAllVars() const;
         //  ........................................................................................    ERG+
-        virtual bool SetVarInactive(const wxString& _i_key, const wxString& _i_val);
-        virtual bool UnsetVarInactive(const wxString& _i_key);
-        virtual void UnsetAllVarsInactive();
-        virtual const StringHash& GetAllVarsInactive() const;
+        virtual bool SetVarInactive(const wxString& _i_key, const wxString& _i_val);    //!< add an inactive CustomVar
+        virtual bool UnsetVarInactive(const wxString& _i_key);                          //!< del an inactive CustomVar
+        virtual void UnsetAllVarsInactive();                                            //!< del all inactive CustomVars
+        virtual const StringHash& GetAllVarsInactive() const;                           //!< get all inactive CustomVars
         //  ........................................................................................    ERG-
     protected:
         int m_Platform;
@@ -149,9 +149,9 @@ class DLLIMPORT CompileOptionsBase
         wxArrayString m_Scripts;
         bool m_Modified;
         bool m_AlwaysRunPostCmds;
-        StringHash m_Vars;
         //  ........................................................................................    ERG+
-        StringHash m_VarsInactive;
+        StringHash m_Vars;                                                              //!< map for active CustomVars
+        StringHash m_VarsInactive;                                                      //!< map for inactive CustomVars
         //  ........................................................................................    ERG+
     private:
 };

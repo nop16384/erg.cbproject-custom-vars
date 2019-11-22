@@ -1,26 +1,62 @@
 #   ------------------------------------------------------------------------------------------------
+#   build_pub__publish_c_cpp
+#
+#   suppress ERG modification marks
+#
+#   $1  src-file apath
+#   $2  pub-file apath
+#   ------------------------------------------------------------------------------------------------
+function    build_pub__publish_c_cpp
+{
+    cat "$1" | sed                              \
+            -e '/^[ \t]*\/\/[ \t]*ERG/d'        \
+            -e '/ERG[+-]$/d'                    >   "$2"
+}
+#   ------------------------------------------------------------------------------------------------
+#   build_pub__publish_xrc
+#
+#   suppress HTML comments from file
+#
+#   $1  src-file apath
+#   $2  pub-file apath
+#   ------------------------------------------------------------------------------------------------
+function    build_pub__publish_xrc
+{
+    cat "$1"  | sed '/<!--.*-->/d' | sed '/<!--/,/-->/d' > "$2"
+}
+#   ------------------------------------------------------------------------------------------------
 #   build_pub__publish_file
+#
+#   suppress ERG modification marks ( or HTML comments for xrc files ), publish and export
 #
 #   $1  src-file path
 #   $2  pub-file path
 #   ------------------------------------------------------------------------------------------------
 function    build_pub__publish_file
 {
-    local   fsrc fpub
+    local   fsrc fpub ext
     #   ............................................................................................
     fsrc="$1"
     fpub="$2"
+    ext="${fsrc##*.}"
 
-    cat "${fsrc}" | sed                             \
-        -e '/^[ \t]*\/\/[ \t]*ERG/d'                \
-        -e '/ERG[+-]$/d'                            >   "${fpub}"
+    if [[ "${ext}" != "xrc" ]] ; then
+
+        build_pub__publish_c_cpp    "${fsrc}"   "${fpub}"
+
+    else
+
+        build_pub__publish_xrc      "${fsrc}"   "${fpub}"
+
+    fi
 }
 #   ------------------------------------------------------------------------------------------------
 #   build_pub__gen_patch
 #
-#   $1  original file   rpath
-#   $2  modified file   apath
-#   $3  patch file      apath
+#   $1  Ad  Trunk to generate the path against
+#   $2  Rf  file in trunk
+#   $3  Af  modified file
+#   $4  Af  patch file
 #   ------------------------------------------------------------------------------------------------
 function    build_pub__gen_patch
 {
@@ -30,48 +66,17 @@ function    build_pub__gen_patch
     fpm="$2"
     fpp="$3"
 
-    cd "${CbTrunkDir}"                                                                              #   get system-independant : diff from trunk dir
+    cd "$1"                                                                                         #   get system-independant : diff from trunk dir
 
-    diff -u "${fpo}" "${fpm}" > "${fpp}"
+    diff -u "$2" "$3" > "$4"
 }
 #   ------------------------------------------------------------------------------------------------
-#   build_pub
+#   build_pub__apply_patch__add_var
 #   ------------------------------------------------------------------------------------------------
-function    build_pub
+function    build_pub__apply_patch__add_var
 {
-    local   i
-    local   f d
-    local   fsrc fpub ftrk fxp
-    #   ............................................................................................
-    for (( i=0 ; i < $((FilesCard)) ; i+=1 )) ; do
-
-        f="${Files[$((i))]}"
-        d="${Dirs[$((i))]}"
-
-        fsrc="${ProjectDir}/src/${f}"
-        fpub="${PubDir}/${f}"
-        ftrk="${CbTrunkDir}/${d}/${f}"
-        fxp="${XpDir}/${f}"
-
-        #echo "src:${fsrc}"
-        #echo "pub:${fpub}"
-        #echo "trk:${ftrk}"
-        #echo "xp :${fxp}"
-
-        echo "pub:doing ${f}..."
-
-        #   suppress ERG modification marks, publish and export
-        build_pub__publish_file "${fsrc}" "${fpub}"
-        cp "${fpub}" "${fxp}"
-
-        #   generate patch
-        fpn="erg.cb-cvars--patch--${f}"
-        fpp="${PubDir}/patches/${fpn}"
-        build_pub__gen_patch "${d}/${f}" "${fpub}" "${fpp}"
-
-        #   update "erg.cb-cvars--apply-patches-vars.bash"
-        echo "FPatch[${i}]=${fpn}"      >> "${PubDir}/lx/erg.cb-cvars--apply-patches-vars.bash"
-        echo "  FDst[${i}]=${d}/${f}"   >> "${PubDir}/lx/erg.cb-cvars--apply-patches-vars.bash"
-
-    done
+    #   update "erg.cb-cvars--apply-patches-vars.bash"
+    #echo "> updating script vars..."
+    echo "FPatch[${i}]=${FnPatch}"  >> "${AdPub}/lx/erg.cb-cvars--apply-patches-vars.bash"
+    echo "  FDst[${i}]=${D}/${F}"   >> "${AdPub}/lx/erg.cb-cvars--apply-patches-vars.bash"
 }

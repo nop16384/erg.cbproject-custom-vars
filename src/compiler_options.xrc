@@ -1051,7 +1051,7 @@
 															<border>8</border>
 														</object>
 														<object class="sizeritem">
-															<object class="wxButton" name="btnClearVar">
+															<object class="wxButton" name="btnDeleteAllVars">
 																<label>Delete &amp;All</label>
 															</object>
 															<flag>wxALIGN_TOP</flag>

@@ -17,10 +17,10 @@
 				</Compiler>
 				<ExtraCommands>
 					<Add before="chmod u=rwx build/lx/build.bash" />
-					<Add before="./build/lx/build.bash $(PROJECT_DIR) dev $(CB_CVARS__CB_TRUNK_DIR) $(CB_CVARS__CB_SVN_VERSION) $(CB_CVARS__GIT_VERSION)" />
+					<Add before="./build/lx/build.bash $(PROJECT_DIR) dev $(CB_CVARS__CB_SVN_TRUNK_DIR) $(CB_CVARS__CB_OBF_TRUNK_DIR) $(CB_CVARS__CB_SVN_VERSION) $(CB_CVARS__GIT_VERSION)" />
 				</ExtraCommands>
 			</Target>
-			<Target title="lx-pub">
+			<Target title="lx-pub-svn">
 				<Option output="bin/D/erg" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/D/" />
 				<Option type="1" />
@@ -30,13 +30,40 @@
 				</Compiler>
 				<ExtraCommands>
 					<Add before="chmod u=rwx build/lx/build.bash" />
-					<Add before="./build/lx/build.bash $(PROJECT_DIR) pub $(CB_CVARS__CB_TRUNK_DIR) $(CB_CVARS__CB_SVN_VERSION) $(CB_CVARS__GIT_VERSION)" />
+					<Add before="./build/lx/build.bash $(PROJECT_DIR) pub-svn $(CB_CVARS__CB_SVN_TRUNK_DIR) $(CB_CVARS__CB_OBF_TRUNK_DIR) $(CB_CVARS__CB_SVN_VERSION) $(CB_CVARS__GIT_VERSION)" />
+				</ExtraCommands>
+			</Target>
+			<Target title="lx-pub-obf">
+				<Option output="bin/D/erg" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/D/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<ExtraCommands>
+					<Add before="chmod u=rwx build/lx/build.bash" />
+					<Add before="./build/lx/build.bash $(PROJECT_DIR) pub-obf $(CB_CVARS__CB_SVN_TRUNK_DIR) $(CB_CVARS__CB_OBF_TRUNK_DIR) $(CB_CVARS__CB_SVN_VERSION) $(CB_CVARS__GIT_VERSION)" />
+				</ExtraCommands>
+			</Target>
+			<Target title="lx-pub-all">
+				<Option output="bin/D/erg" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/D/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<ExtraCommands>
+					<Add before="chmod u=rwx build/lx/build.bash" />
+					<Add before="./build/lx/build.bash $(PROJECT_DIR) pub-all $(CB_CVARS__CB_SVN_TRUNK_DIR) $(CB_CVARS__CB_OBF_TRUNK_DIR) $(CB_CVARS__CB_SVN_VERSION) $(CB_CVARS__GIT_VERSION)" />
 				</ExtraCommands>
 			</Target>
 			<Environment>
-				<Variable name="CB_CVARS__CB_SVN_VERSION" value="" />
-				<Variable name="CB_CVARS__CB_TRUNK_DIR" value="" />
-				<Variable name="CB_CVARS__GIT_VERSION" value="v-01.01.002" />
+				<Variable name="CB_CVARS__CB_OBF_TRUNK_DIR" value="/home/erg/Src/C-C++/codeblocks/obfuscated.cb" />
+				<Variable name="CB_CVARS__CB_SVN_TRUNK_DIR" value="/home/gwr/Src/C-C++/codeblocks/svn-ro/svn11914/trunk" />
+				<Variable name="CB_CVARS__CB_SVN_VERSION" value="11914" />
+				<Variable name="CB_CVARS__GIT_VERSION" value="v-01.01.003" />
 			</Environment>
 		</Build>
 		<Compiler>
@@ -49,6 +76,12 @@
 			<Option virtualFolder="build/lx/" />
 		</Unit>
 		<Unit filename="build/lx/build.dev.bash">
+			<Option virtualFolder="build/lx/" />
+		</Unit>
+		<Unit filename="build/lx/build.pub-obf.bash">
+			<Option virtualFolder="build/lx/" />
+		</Unit>
+		<Unit filename="build/lx/build.pub-svn.bash">
 			<Option virtualFolder="build/lx/" />
 		</Unit>
 		<Unit filename="build/lx/build.pub.bash">

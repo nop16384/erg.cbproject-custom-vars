@@ -1,72 +1,174 @@
 #!/bin/bash
 
+#   ################################################################################################
+#
+#   build/build.bash
+#
+#   $1  Ad  C::B project dir
+#   $2      C::B target ( dev / pub-svn / pub-obf )
+#   $3  Ad  C::B trunk to take as svn reference
+#   $4  Ad  C::B trunk to take as obf reference
+#   $5      C::B svn version
+#   $6      CVars version
+#
+#   ################################################################################################
+
 mkdir -p ./out/pub/lx
-mkdir -p ./out/pub/patches
+mkdir -p ./out/pub/patches/svn
+mkdir -p ./out/pub/patches/obf
 mkdir -p ./out/export
 
-ProjectDir="$1"
-ProjectTgt="$2"
-CbTrunkDir="$3"
-CbSvnVersion="$4"
-CbCVarsGitVersion="$5"
+#   ------------------------------------------------------------------------------------------------
+#   Vars / options
+#   ------------------------------------------------------------------------------------------------
+AdCbProject="$1"
+OptTarget="$2"
 
-#   ensure some vars are defined
-if [[ -z "${CbTrunkDir}" ]] ; then
-    echo "> Environment variable 'CbTrunkDir' not defined. Please ensure that the CustomVar"
-    echo "  CB_CVARS__CB_TRUNK_DIR is defined in C::B:"
+AdCbSvnTrunk=""
+AdCbObfTrunk=""
+
+CbSvnVersion="$5"
+CbCVarsGitVersion="$6"
+#   ------------------------------------------------------------------------------------------------
+if [[ ( "${OptTarget}" != "dev" ) && ( "${OptTarget}" != "pub-svn" ) && ( "${OptTarget}" != "pub-obf" ) && ( "${OptTarget}" != "pub-all" ) ]] ; then
+    echo "> Parameter #2 'OptTarget' not defined / bad value."
+    echo "  Authorized values are : 'dev' , 'pub-svn' , 'pub-obf' , 'pub-all' ."
     exit 1
 fi
+
+if      [[ ( "${OptTarget}" == "dev" ) ]] ; then
+    AdCbSvnTrunk=""
+    AdCbObfTrunk=""
+elif    [[ ( "${OptTarget}" == "pub-svn" ) && ( -n "$3" ) ]] ; then
+    AdCbSvnTrunk="$3"
+elif    [[ ( "${OptTarget}" == "pub-obf" ) && ( -n "$4" ) ]] ; then
+    AdCbObfTrunk="$4"
+elif    [[ ( "${OptTarget}" == "pub-all" ) && ( -n "$3" ) && ( -n "$4" ) ]] ; then
+    AdCbSvnTrunk="$3"
+    AdCbObfTrunk="$4"
+else
+    echo "> Parameter #3 'cb svn trunk dir' and/or Parameter #3 'cb obf trunk dir' not defined.Please ensure"
+    echo  " that the the corresponding CustomVars CB_CVARS__CB_SVN_TRUNK_DIR or CB_CVARS__CB_OBF_TRUNK_DIR"
+    echo  " are defined in C::B:"
+    exit 1
+fi
+
 if [[ -z "${CbSvnVersion}" ]] ; then
-    echo "> Environment variable 'CbSvnVersion' not defined. Please ensure that the CustomVar"
+    echo "> Parameter #5 'CbSvnVersion' not defined. Please ensure that the CustomVar"
     echo "  CB_CVARS__CB_SVN_VERSION is defined in C::B:"
     exit 1
 fi
 if [[ -z "${CbCVarsGitVersion}" ]] ; then
-    echo "> Environment variable 'CbCVarsGitVersion' not defined. Please ensure that the CustomVar"
+    echo "> Parameter #6 'CbCVarsGitVersion' not defined. Please ensure that the CustomVar"
     echo "  CB_CVARS__GIT_VERSION is defined in C::B:"
     exit 1
 fi
 
-ProjectDir="${ProjectDir%/}"
+AdCbProject="${AdCbProject%/}"                                                                      # C::B $(PROJECT_DIR) comes with a trailing '/'
 
-#   files modified and relative folders in C::B trunk
-source "./build/lx/build.config.bash"
+source "./build/lx/build.config.bash"                                                               # files modified & relative folders in C::B trunk
 
-#   functions for dev and pub targets
-source "./build/lx/build.dev.bash"
+source "./build/lx/build.dev.bash"                                                                  # functions for dev and pub targets
 source "./build/lx/build.pub.bash"
+source "./build/lx/build.pub-svn.bash"
+source "./build/lx/build.pub-obf.bash"
 
-#   for publication target
-PubDir="${ProjectDir}/out/pub"
+AdPub="${AdCbProject}/out/pub"                                                                      # for publication targets
 
-#   for cb-custom project
-XpDir="${ProjectDir}/out/export"
+AdXport="${AdCbProject}/out/export"                                                                 # for cb-custom project
 
-#   message
-echo "ProjectDir    :${ProjectDir}"
-echo "Project Target:${ProjectTgt}"
+AfXrcSrc="${AdCbProject}/src/compiler_options.xrc"
+AfXrcPub="${AdPub}/compiler_options.xrc"
+
+echo "Summary:"                                                                                     # message
+echo "-------"
+echo "Project Target:${OptTarget}"
+echo "AdCbProject   :${AdCbProject}"
+echo "AdPub         :${AdPub}"
+echo "AdXport       :${AdXport}"
+echo "AdCbSvnTrunk  :${AdCbSvnTrunk}"
+echo "AdCbObfTrunk  :${AdCbObfTrunk}"
+echo ""
+#   ------------------------------------------------------------------------------------------------
+#   Go
+#   ------------------------------------------------------------------------------------------------
+
+#   prebuild step : set version information
+rm      ${AdPub}/0-GENERATED-FROM--* 2>/dev/null
+echo    -n "" > "${AdPub}/0-GENERATED-FROM--CB-SVN-${CbSvnVersion}"
+echo    -n "" > "${AdPub}/0-GENERATED-FROM--CB-CVARS-${CbCVarsGitVersion}"
+
+#   prebuild step : init linux user script vars in pub directory
+echo "FilesCard=${FilesCard}" > "${AdPub}/lx/erg.cb-cvars--apply-patches-vars.bash"
+
+#   prebuild step : build target specific
+if      [[ "${OptTarget}" == "dev" ]] ; then
+    build_dev__prebuild
+elif    [[ (( "${OptTarget}" == "pub-svn" )) || (( "${OptTarget}" == "pub-all" )) ]] ; then
+    build_pub_svn__prebuild
+elif    [[ (( "${OptTarget}" == "pub-obf" )) || (( "${OptTarget}" == "pub-all" )) ]] ; then
+    build_pub_obf__prebuild
+fi
+
 echo ""
 
-if [[ "${ProjectTgt}" == "dev" ]] ; then
+#   main loop
+for (( i=0 ; i < $((FilesCard)) ; i+=1 )) ; do
+
+    #   define vars
+    F="${Files[$((i))]}"
+    D="${Dirs[$((i))]}"
+
+    AfSrc="${AdCbProject}/src/${F}"
+    AfPub="${AdPub}/${F}"
+    AfXport="${AdXport}/${F}"
+    AfTrunk="${AdCbSvnTrunk}/${D}/${F}"
+    FnPatch="erg.cb-cvars--patch--${F}"
+
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    echo "pub:doing ${F}..."
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+
+    case "${OptTarget}" in
+
+    "dev")
+    #echo "dev"
     build_dev
-    echo ""
-fi
+    ;;
 
-if [[ "${ProjectTgt}" == "pub" ]] ; then
+    "pub-svn")
+    #echo "pub-svn"
+    build_pub__publish_file "${AfSrc}" "${AfPub}"
+    build_pub_svn
+    build_pub__apply_patch__add_var
+    ;;
 
-    #   set version information
-    rm      ${PubDir}/0-GENERATED-FROM--* 2>/dev/null
-    echo    -n "" > "${PubDir}/0-GENERATED-FROM--CB-SVN-${CbSvnVersion}"
-    echo    -n "" > "${PubDir}/0-GENERATED-FROM--CB-CVARS-${CbCVarsGitVersion}"
+    "pub-obf")
+    #echo "pub-obf"
+    build_pub__publish_file "${AfSrc}" "${AfPub}"
+    build_pub_obf
+    build_pub__apply_patch__add_var
+    ;;
 
-    #   init user script vars in pub directory
-    echo "FilesCard=${FilesCard}" > "${PubDir}/lx/erg.cb-cvars--apply-patches-vars.bash"
+    "pub-all")
+    #echo "pub-all"
+    build_pub__publish_file "${AfSrc}" "${AfPub}"
+    build_pub_svn
+    build_pub_obf
+    build_pub__apply_patch__add_var
+    ;;
 
-    build_pub
+    *)
+    echo "> Main loop:bad target"
+    exit 1
+    ;;
 
-    #   publish user script
-    cp  "${ProjectDir}/build/lx/erg.cb-cvars--apply-patches.bash"       "${PubDir}/lx"
+    esac
 
-fi
+done
+
+#   postbuild step : publish linux user script
+cp  "${AdCbProject}/build/lx/erg.cb-cvars--apply-patches.bash"  "${AdPub}/lx"
+chmod u=rwx,g=rwx "${AdPub}/lx"
 
 exit 0

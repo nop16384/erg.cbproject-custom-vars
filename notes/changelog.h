@@ -8,3 +8,15 @@
         compileoptionsbase.cpp
     - better publication directories
     - bash script for users
+----------------------------------------------------------------------------------------------------
+commit 8a7401e7ce377b2e82b2e199d719c72ffcb5b91c
+----------------------------------------------------------------------------------------------------
+2019.11.21
+    - done modifications following obfuscated's code review
+    - updated build scripts following xrc HTML comments removal in pub targets
+
+2019.11.22
+    - renamed all "ClearVar" stuff to "DeleteAllVars"
+----------------------------------------------------------------------------------------------------
+commit
+----------------------------------------------------------------------------------------------------

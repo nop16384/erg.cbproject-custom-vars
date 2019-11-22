@@ -4,8 +4,10 @@
 	<File name="build/lx/build.bash" uid="019039024000809" />
 	<File name="build/lx/build.config.bash" uid="019039024000809" />
 	<File name="build/lx/build.dev.bash" uid="019039024000809" />
+	<File name="build/lx/build.pub-svn.bash" uid="019039024000809" />
 	<File name="build/lx/build.pub.bash" uid="019039024000809" />
 	<File name="build/lx/erg.cb-cvars--apply-patches.bash" uid="019039024000809" />
+	<File name="notes/todo.h" uid="019039024000809" />
 	<File name="src/compileoptionsbase.cpp" uid="019039024000809" />
 	<File name="src/compileoptionsbase.h" uid="019039024000809" />
 	<File name="src/compiler_options.xrc" uid="019039024000809" />

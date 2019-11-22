@@ -551,7 +551,7 @@ bool CompileOptionsBase::UnsetVar(const wxString& key)
 void CompileOptionsBase::UnsetAllVars()
 {
     //  ............................................................................................    ERG+
-    SetModified(true);                                                                              // _ERG_BCOR_ added, was missing
+    SetModified(true);                                                                              // _ERG_CORR_ added, was missing
     //  ............................................................................................    ERG+
     m_Vars.clear();
 }
