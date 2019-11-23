@@ -580,34 +580,37 @@ const StringHash& CompileOptionsBase::GetAllVars() const
     return m_Vars;
 }
 //  ................................................................................................    ERG+
-bool CompileOptionsBase::SetVarInactive(const wxString& _i_key, const wxString& _i_val)
+bool CompileOptionsBase::SetInactiveVar(const wxString& _i_key, const wxString& _i_val)
 {
-    m_VarsInactive[_i_key] = _i_val;
+    CustomVar cv { _i_val, wxString(""), 0 };
+
+    m_InactiveVars[_i_key] = cv;
     SetModified(true);
     return true;
 }
 
-bool CompileOptionsBase::UnsetVarInactive(const wxString& _i_key)
+bool CompileOptionsBase::UnsetInactiveVar(const wxString& _i_key)
 {
-    StringHash::iterator it = m_VarsInactive.find(_i_key);
-    if (it != m_VarsInactive.end())
+    CustomVarHash::iterator it = m_InactiveVars.find(_i_key);
+
+    if (it != m_InactiveVars.end())
     {
-        m_VarsInactive.erase(it);
+        m_InactiveVars.erase(it);
         SetModified(true);
         return true;
     }
     return false;
 }
 
-void CompileOptionsBase::UnsetAllVarsInactive()
+void CompileOptionsBase::UnsetAllInactiveVars()
 {
     SetModified(true);
-    m_VarsInactive.clear();
+    m_InactiveVars.clear();
 }
 
-StringHash const & CompileOptionsBase::GetAllVarsInactive() const
+CustomVarHash const & CompileOptionsBase::GetAllInactiveVars() const
 {
-    return m_VarsInactive;
+    return m_InactiveVars;
 }
 //  ................................................................................................    ERG-
 void CompileOptionsBase::SetLinkerExecutable(LinkerExecutableOption option)

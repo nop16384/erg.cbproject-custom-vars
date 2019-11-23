@@ -11,6 +11,15 @@
 
 WX_DECLARE_STRING_HASH_MAP(wxString, StringHash);
 
+typedef struct
+{
+    wxString    value;
+    wxString    comment;
+    int         flags;
+} CustomVar;
+
+WX_DECLARE_STRING_HASH_MAP(CustomVar, CustomVarHash);
+
 /// Enum which specifies which executable from the toolchain executables would be used for linking
 /// the target.
 enum class LinkerExecutableOption : int32_t
@@ -129,10 +138,10 @@ class DLLIMPORT CompileOptionsBase
         virtual const wxString& GetVar(const wxString& key) const;
         virtual const StringHash& GetAllVars() const;
         //  ........................................................................................    ERG+
-        virtual bool SetVarInactive(const wxString& _i_key, const wxString& _i_val);    //!< add an inactive CustomVar
-        virtual bool UnsetVarInactive(const wxString& _i_key);                          //!< del an inactive CustomVar
-        virtual void UnsetAllVarsInactive();                                            //!< del all inactive CustomVars
-        virtual const StringHash& GetAllVarsInactive() const;                           //!< get all inactive CustomVars
+        virtual bool SetInactiveVar(const wxString& _i_key, const wxString& _i_val);    //!< add an inactive CustomVar
+        virtual bool UnsetInactiveVar(const wxString& _i_key);                          //!< del an inactive CustomVar
+        virtual void UnsetAllInactiveVars();                                            //!< del all inactive CustomVars
+        virtual const CustomVarHash& GetAllInactiveVars() const;                           //!< get all inactive CustomVars
         //  ........................................................................................    ERG-
     protected:
         int m_Platform;
@@ -150,8 +159,8 @@ class DLLIMPORT CompileOptionsBase
         bool m_Modified;
         bool m_AlwaysRunPostCmds;
         //  ........................................................................................    ERG+
-        StringHash m_Vars;                                                              //!< map for active CustomVars
-        StringHash m_VarsInactive;                                                      //!< map for inactive CustomVars
+        StringHash      m_Vars;                                                                     //!< map for active CustomVars
+        CustomVarHash   m_InactiveVars;                                                             //!< map for inactive CustomVars
         //  ........................................................................................    ERG+
     private:
 };
