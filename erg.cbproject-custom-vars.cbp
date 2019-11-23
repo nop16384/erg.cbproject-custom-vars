@@ -5,7 +5,7 @@
 		<Option title="erg.cbproject-custom-vars" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="src/;notes/;build/;build/lx/;" />
+		<Option virtualFolders="src/;notes/;build/;build/lx/;dev/;dev/lx/;" />
 		<Build>
 			<Target title="lx-dev">
 				<Option output="bin/D/erg" prefix_auto="1" extension_auto="1" />
@@ -59,10 +59,24 @@
 					<Add before="./build/lx/build.bash $(PROJECT_DIR) pub-all $(CB_CVARS__CB_SVN_TRUNK_DIR) $(CB_CVARS__CB_OBF_TRUNK_DIR) $(CB_CVARS__CB_SVN_VERSION) $(CB_CVARS__GIT_VERSION)" />
 				</ExtraCommands>
 			</Target>
+			<Target title="lx-cvars-usage">
+				<Option output="bin/D/erg" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/D/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<ExtraCommands>
+					<Add before="chmod u=rwx dev/lx/cvars-usage.bash" />
+					<Add before="./dev/lx/cvars-usage.bash $(PROJECT_DIR) $(CB_CVARS__CB_USAGE_TRUNK_DIR)" />
+				</ExtraCommands>
+			</Target>
 			<Environment>
 				<Variable name="CB_CVARS__CB_OBF_TRUNK_DIR" value="/home/erg/Src/C-C++/codeblocks/obfuscated.cb" />
 				<Variable name="CB_CVARS__CB_SVN_TRUNK_DIR" value="/home/gwr/Src/C-C++/codeblocks/svn-ro/svn11914/trunk" />
 				<Variable name="CB_CVARS__CB_SVN_VERSION" value="11914" />
+				<Variable name="CB_CVARS__CB_USAGE_TRUNK_DIR" value="/home/gwr/Src/C-C++/codeblocks/svn-ro/svn11914/trunk" />
 				<Variable name="CB_CVARS__GIT_VERSION" value="v-01.01.003" />
 			</Environment>
 		</Build>
@@ -90,7 +104,16 @@
 		<Unit filename="build/lx/erg.cb-cvars--apply-patches.bash">
 			<Option virtualFolder="build/lx/" />
 		</Unit>
+		<Unit filename="dev/lx/cvars-usage.awk">
+			<Option virtualFolder="dev/lx/" />
+		</Unit>
+		<Unit filename="dev/lx/cvars-usage.bash">
+			<Option virtualFolder="dev/lx/" />
+		</Unit>
 		<Unit filename="notes/changelog.h">
+			<Option virtualFolder="notes/" />
+		</Unit>
+		<Unit filename="notes/notes.h">
 			<Option virtualFolder="notes/" />
 		</Unit>
 		<Unit filename="notes/todo.h">
