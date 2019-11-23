@@ -56,6 +56,13 @@ enum class LinkerExecutableOption : int32_t
 class DLLIMPORT CompileOptionsBase
 {
     public:
+        enum
+        {
+            eVarInactive    =   0x0000  ,
+            eVarActive      =   0x0001
+        };
+
+    public:
         CompileOptionsBase();
         virtual ~CompileOptionsBase();
 
