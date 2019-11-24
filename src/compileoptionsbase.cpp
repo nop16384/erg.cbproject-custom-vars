@@ -541,6 +541,30 @@ bool CompileOptionsBase::PSetVar(wxString const & _i_key, wxString const & _i_va
     return true;
 }
 
+bool CompileOptionsBase::GetVarComment(wxString const & _i_key, int _i_flags, wxString & _o_comment)
+{
+    CustomVarHash   &   cvh = ( _i_flags & eVarActive ) ? m_ActiveVars : m_InactiveVars;
+    //  ............................................................................................
+    CustomVarHash::iterator it = cvh.find(_i_key);
+    if (it == cvh.end())
+        return false;
+
+    _o_comment = it->second.comment;
+    return true;
+}
+bool CompileOptionsBase::SetVarComment(wxString const & _i_key, int _i_flags, wxString const & _i_comment)
+{
+    CustomVarHash   &   cvh = ( _i_flags & eVarActive ) ? m_ActiveVars : m_InactiveVars;
+    //  ............................................................................................
+    CustomVarHash::iterator it = cvh.find(_i_key);
+    if (it == cvh.end())
+        return false;
+
+    it->second.comment = _i_comment;
+    return true;
+}
+
+
 bool CompileOptionsBase::SetVar(const wxString& key, const wxString& value, bool onlyIfExists)
 {
     return PSetVar(key, value, eVarActive, wxString(""), onlyIfExists);

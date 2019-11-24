@@ -1002,6 +1002,14 @@
 													<option>1</option>
 												</object>
                                                 -->
+												<object class="sizeritem">                          <!-- wxTextCtrl for editing var comments -->
+													<object class="wxTextCtrl" name="VarComment">
+														<style>wxTE_MULTILINE|wxTE_DONTWRAP|wxVSCROLL|wxHSCROLL</style>
+													</object>
+													<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
+													<border>8</border>
+                                                    <option>1</option>                              <!-- proportion ( from wxSmith ) -->
+												</object>
                                                 <!-- ...............................................    ERG-    -->
 												<object class="sizeritem">
 													<object class="wxStaticText" name="ID_STATICTEXT16">

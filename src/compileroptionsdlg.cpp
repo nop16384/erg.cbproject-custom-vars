@@ -258,8 +258,10 @@ CompilerOptionsDlg::CompilerOptionsDlg(wxWindow* parent, CompilerGCC* compiler, 
     wxWindow    *   w1          =   XRCCTRL(*this, "tabVars", wxPanel);
     wxSizer     *   bsz         =   w1->GetSizer();
     wxSizerFlags    sizerflags;
-    int             colflags    = wxDATAVIEW_COL_RESIZABLE | wxDATAVIEW_COL_SORTABLE;
+    int             colflags    =   wxDATAVIEW_COL_RESIZABLE | wxDATAVIEW_COL_SORTABLE;
     size_t          idx         =   0;
+
+    m_PreviouslySelectedRow     =   wxNOT_FOUND;                                                    // reset at each config invocation
 
     m_VarsWxCtrl    =   new wxDataViewListCtrl  (w1, wxID_ANY);
     m_VarsWxModel   =   new wxDataViewListStore ();
@@ -280,10 +282,23 @@ CompilerOptionsDlg::CompilerOptionsDlg(wxWindow* parent, CompilerGCC* compiler, 
 
     wxXmlResource::Get()->AttachUnknownControl(wxT("ErgCustomVars"), m_VarsWxCtrl);
 
-    sizerflags.Expand().Proportion(1);  // sizeritem for ID_STATICTEXT16 "These variables... " has wxEXPAND so we need to set Proportion
+    sizerflags.Expand().Proportion(3);  // sizeritem for ID_STATICTEXT16 "These variables... " has wxEXPAND so we need to set Proportion
+    sizerflags.Border(wxALL, 8);
+
+    wxTextCtrl *    tc = XRCCTRL(*this, "VarComment", wxTextCtrl);
+    wxTextAttr      tcs;
+    wxColour        tcc(0x88, 0x88, 0x88);
+
+    tcs.SetTextColour(tcc);                                                                         // _ERG_TODO_ does not work
+    tcs.SetFlags( wxTEXT_ATTR_TEXT_COLOUR );
+    tc->SetDefaultStyle( tcs );
+
     bsz->Insert(idx, m_VarsWxCtrl, sizerflags);
 
-    Bind(wxEVT_DATAVIEW_ITEM_VALUE_CHANGED, &CompilerOptionsDlg::OnChangedVarClick, this);
+    Bind(wxEVT_DATAVIEW_ITEM_VALUE_CHANGED  , &CompilerOptionsDlg::OnVarListVarChanged, this);
+    Bind(wxEVT_DATAVIEW_SELECTION_CHANGED   , &CompilerOptionsDlg::OnVarListSelChanged, this);
+
+    Bind(wxEVT_TEXT                         , &CompilerOptionsDlg::OnTextEvent, this);
     //  ............................................................................................    ERG-
     if (m_pProject)
     {
@@ -555,13 +570,14 @@ void CompilerOptionsDlg::DoFillCompilerPrograms()
 } // DoFillCompilerPrograms
 
 //  ................................................................................................    ERG+
-void CompilerOptionsDlg::WxModelAddVarHelper(wxString const& _i_key, wxString const& _i_val, bool _i_active)
+void CompilerOptionsDlg::WxModelAddVarHelper(bool _i_active, wxString const& _i_key, wxString const& _i_val, wxString const& _i_com)
 {
     wxVector<wxVariant>     row;
     //  ............................................................................................
     row.push_back( wxVariant(_i_active) );
     row.push_back( wxVariant(_i_key)    );
     row.push_back( wxVariant(_i_val)    );
+    row.push_back( wxVariant(_i_com)    );
 
     m_VarsWxModel->AppendItem(row);
 }
@@ -581,29 +597,10 @@ void CompilerOptionsDlg::DoFillVars()
         return;
 
     for (CustomVarHash::const_iterator it = va->begin(); it != va->end(); ++it)
-        WxModelAddVarHelper(it->first, it->second.value, true);
+        WxModelAddVarHelper(true, it->first, it->second.value, it->second.comment);
 
     for (CustomVarHash::const_iterator it = vi->begin(); it != vi->end(); ++it)
-        WxModelAddVarHelper(it->first, it->second.value, false);
-    //  ............................................................................................    ERG+
-    //  ERG wxListBox* lst = XRCCTRL(*this, "lstVars", wxListBox);
-    //  ERG     if (!lst)
-    //  ERG         return;
-    //  ERG     lst->Clear();
-    //  ERG     const StringHash* vars = 0;
-    //  ERG     const CompileOptionsBase* base = GetVarsOwner();
-    //  ERG     if (base)
-    //  ERG     {
-    //  ERG         vars = &base->GetAllVars();
-    //  ERG     }
-    //  ERG     if (!vars)
-    //  ERG         return;
-    //  ERG     for (StringHash::const_iterator it = vars->begin(); it != vars->end(); ++it)
-    //  ERG     {
-    //  ERG         wxString text = it->first + _T(" = ") + it->second;
-    //  ERG         lst->Append(text, new VariableListClientData(it->first, it->second));
-    //  ERG     }
-    //  ............................................................................................    ERG-
+        WxModelAddVarHelper(false, it->first, it->second.value, it->second.comment);
 } // DoFillVars
 
 void CompilerOptionsDlg::DoFillOthers()
@@ -1228,57 +1225,35 @@ void CompilerOptionsDlg::DoSaveVars()
     base->UnsetAllVars();
     base->UnsetAllInactiveVars();
 
+    //  this save the comment of current selected row if no row selection change has happened
+    int mrow = m_VarsWxCtrl->GetSelectedRow();
+    if ( mrow != wxNOT_FOUND )
+        WxModelSaveComment(mrow);
+
     for ( unsigned int ridx = 0 ; ridx != m_VarsWxModel->GetItemCount() ; ridx++ )
     {
-        wxVariant   va, vk, vv;
+        wxVariant   va, vk, vv, vc;
         m_VarsWxModel->GetValueByRow(va, ridx, 0);
         m_VarsWxModel->GetValueByRow(vk, ridx, 1);
         m_VarsWxModel->GetValueByRow(vv, ridx, 2);
+        m_VarsWxModel->GetValueByRow(vc, ridx, 3);
 
         bool        active  = va.GetBool();
         wxString    key     = vk.GetString().Trim(true).Trim(false);
         wxString    val     = vv.GetString().Trim(true).Trim(false);
+        wxString    com     = vc.GetString().Trim(true).Trim(false);
 
         if ( active )
+        {
             base->SetVar(key, val);
+            base->SetVarComment(key, CompileOptionsBase::eVarActive, com);
+        }
         else
+        {
             base->SetInactiveVar(key, val);
+            base->SetVarComment(key, CompileOptionsBase::eVarInactive, com);
+        }
     }
-    //  ............................................................................................    ERG+
-    //  ERG CompileOptionsBase* pBase = GetVarsOwner();
-    //  ERG     if (pBase)
-    //  ERG     {
-    //  ERG         // let's process all the stored CustomVarActions
-    //  ERG         for (unsigned int idxAction = 0; idxAction < m_CustomVarActions.size(); ++idxAction)
-    //  ERG         {
-    //  ERG             CustomVarAction Action = m_CustomVarActions[idxAction];
-    //  ERG             switch(Action.m_Action)
-    //  ERG             {
-    //  ERG                 case CVA_Add:
-    //  ERG                     pBase->SetVar(Action.m_Key, Action.m_KeyValue);
-    //  ERG                     break;
-    //  ERG                 case CVA_Edit:
-    //  ERG                 {
-    //  ERG                     // first split up the KeyValue
-    //  ERG                     wxString NewKey = Action.m_KeyValue.BeforeFirst(_T('=')).Trim(true).Trim(false);
-    //  ERG                     wxString NewValue = Action.m_KeyValue.AfterFirst(_T('=')).Trim(true).Trim(false);
-    //  ERG                     if (Action.m_Key != NewKey)
-    //  ERG                     {   // the key name changed
-    //  ERG                         pBase->UnsetVar(Action.m_Key);
-    //  ERG                     }
-    //  ERG                     pBase->SetVar(NewKey, NewValue);
-    //  ERG                     break;
-    //  ERG                 }
-    //  ERG                 case CVA_Remove:
-    //  ERG                     pBase->UnsetVar(Action.m_Key);
-    //  ERG                     break;
-    //  ERG                 default:
-    //  ERG                     break;
-    //  ERG             } // end switch
-    //  ERG         } // end for : idx : idxAction
-    //  ERG         m_CustomVarActions.clear();
-    //  ERG     }
-    //  ............................................................................................    ERG-
 } // DoSaveVars
 
 void CompilerOptionsDlg::DoSaveCompilerDefinition()
@@ -2126,46 +2101,10 @@ void CompilerOptionsDlg::OnAddVarClick(cb_unused wxCommandEvent& event)
         key.Trim(true).Trim(false);
         value.Trim(true).Trim(false);
         QuoteString(value, _("Add variable quote string"));
-        //  ........................................................................................    ERG+
-        //  ERG CustomVarAction Action = {CVA_Add, key, value};
-        //  ERG m_CustomVarActions.push_back(Action);
-        //  ERG XRCCTRL(*this, "lstVars", wxListBox)->Append(key + _T(" = ") + value, new VariableListClientData(key, value));
-        //  ........................................................................................    ERG-
-        WxModelAddVarHelper(key, value ,true);
+        WxModelAddVarHelper(true, key, value);
         m_bDirty = true;
     }
 } // OnAddVarClick
-//  ................................................................................................    ERG+
-//  ERG void CompilerOptionsDlg::OnEditVarClick(cb_unused wxCommandEvent& event)
-//  ERG {
-//  ERG     wxListBox *list = XRCCTRL(*this, "lstVars", wxListBox);
-//  ERG     int sel = list->GetSelection();
-//  ERG     if (sel == -1)
-//  ERG         return;
-
-//  ERG     VariableListClientData *data = static_cast<VariableListClientData*>(list->GetClientObject(sel));
-//  ERG     wxString key = data->key;
-//  ERG     wxString value = data->value;
-
-//  ERG     EditPairDlg dlg(this, key, value, _("Edit variable"), EditPairDlg::bmBrowseForDirectory);
-//  ERG     PlaceWindow(&dlg);
-//  ERG     if (dlg.ShowModal() == wxID_OK)
-//  ERG     {
-//  ERG         key.Trim(true).Trim(false);
-//  ERG         value.Trim(true).Trim(false);
-//  ERG         QuoteString(value, _("Edit variable quote string"));
-
-//  ERG         if (value != data->value  ||  key != data->key)
-//  ERG         { // something has changed
-//  ERG             CustomVarAction Action = {CVA_Edit, data->key, key + _T(" = ") + value};
-//  ERG             m_CustomVarActions.push_back(Action);
-//  ERG             list->SetString(sel, key + _T(" = ") + value);
-//  ERG             data->key = key;
-//  ERG             data->value = value;
-//  ERG             m_bDirty = true;
-//  ERG         }
-//  ERG     }
-//  ERG } // OnEditVarClick
 //  ................................................................................................    ERG+
 void CompilerOptionsDlg::OnBrowseVarClick(cb_unused wxCommandEvent& event)
 {
@@ -2182,22 +2121,77 @@ void CompilerOptionsDlg::OnBrowseVarClick(cb_unused wxCommandEvent& event)
     m_bDirty = true;
 }
 
-void CompilerOptionsDlg::OnChangedVarClick(cb_unused wxDataViewEvent& event)
+void CompilerOptionsDlg::WxModelSaveComment(int _i_row)
+{
+    wxString com;
+    //  ............................................................................................
+    com = XRCCTRL(*this, "VarComment", wxTextCtrl)->GetValue();
+
+    m_VarsWxModel->SetValueByRow(com, _i_row, 3);  // store value in the model
+}
+
+void CompilerOptionsDlg::WxModelShowComment(int _i_row)
+{
+    wxVariant vc;
+    wxString com;
+    //  ............................................................................................
+    m_VarsWxModel->GetValueByRow(vc, _i_row, 3);
+
+    com = vc.GetString();
+
+    XRCCTRL(*this, "VarComment", wxTextCtrl)->ChangeValue( com );
+}
+
+void CompilerOptionsDlg::OnVarListVarChanged(cb_unused wxDataViewEvent& event)
 {
     m_bDirty = true;
 }
 
+void CompilerOptionsDlg::OnVarListSelChanged(cb_unused wxDataViewEvent& event)
+{
+    //  ............................................................................................
+    //  wxDataViewEvent.IsSelection() seems buggy, we are called only for the newly selected row
+    //  ............................................................................................
+    CompileOptionsBase  *   base    =   GetVarsOwner();
+
+    int                     nmrow   =   wxNOT_FOUND;
+    wxVariant               vc;
+    wxString                sc;
+    //  ............................................................................................
+    if ( ! base )
+        return;
+    //  ............................................................................................
+    //  save value of previously selected row
+    if ( m_PreviouslySelectedRow != wxNOT_FOUND )
+    {
+        WxModelSaveComment(m_PreviouslySelectedRow);
+    }
+    //  ............................................................................................
+    //  show value of newly selected row
+
+    //  wxDataViewListCtrl->GetSelectedRow() gives the index * in the model * of the selected row,
+    //  not the the row's visual index in the control ! ...
+    nmrow = m_VarsWxCtrl->GetSelectedRow();
+    if ( nmrow == wxNOT_FOUND )                                                                     // should not happend at all
+        return;
+
+    //  ... so wxDataViewListStore->GetValueByRow() can be used directly on it !
+    WxModelShowComment(nmrow);
+
+    m_PreviouslySelectedRow = nmrow;                                                                // memorize the selected model's row
+}
+
+void CompilerOptionsDlg::OnTextEvent(cb_unused wxCommandEvent& event)
+{
+    if ( event.GetId() == XRCID("VarComment") )
+    {
+        printf("Var comment changed\n");
+    }
+}
+//  ................................................................................................    ERG-
 void CompilerOptionsDlg::OnRemoveVarClick(cb_unused wxCommandEvent& event)
 {
     //  ............................................................................................    ERG+
-    //  ERG wxListBox *list = XRCCTRL(*this, "lstVars", wxListBox);
-    //  ERG int sel = list->GetSelection();
-    //  ERG if (sel == -1)
-    //  ERG     return;
-    //  ERG const wxString &key = static_cast<VariableListClientData*>(list->GetClientObject(sel))->key;
-    //  ERG if (key.IsEmpty())
-    //  ERG     return;
-
     int sel = m_VarsWxCtrl->GetSelectedRow();
     if ( sel == wxNOT_FOUND )                                                                       // should not happend cf OnUpdateUI()
         return;
@@ -2206,9 +2200,6 @@ void CompilerOptionsDlg::OnRemoveVarClick(cb_unused wxCommandEvent& event)
                     _("Confirmation"),
                     wxYES_NO | wxICON_QUESTION) == wxID_YES)
     {
-        //  ERG CustomVarAction Action = {CVA_Remove, key, wxEmptyString};
-        //  ERG m_CustomVarActions.push_back(Action);
-        //  ERG list->Delete(sel);
         m_VarsWxCtrl->DeleteItem(sel);                                                              // this will update the wxDataViewListStore too
         m_bDirty = true;
     }
@@ -2218,24 +2209,10 @@ void CompilerOptionsDlg::OnRemoveVarClick(cb_unused wxCommandEvent& event)
 void CompilerOptionsDlg::OnDeleteAllVarsClick(cb_unused wxCommandEvent& event)
 {
     //  ............................................................................................    ERG+
-    //  ERG wxListBox* lstVars = XRCCTRL(*this, "lstVars", wxListBox);
-    //  ERG if (lstVars->IsEmpty())
-    //  ERG     return;
     if (cbMessageBox(_("Are you sure you want to clear all variables?"),
                         _("Confirmation"),
                         wxYES | wxNO | wxICON_QUESTION) == wxID_YES)
     {
-        //  ERG Unset all variables of lstVars
-        //  ERG for (size_t i=0; i < lstVars->GetCount(); ++i)
-        //  ERG {
-        //  ERG     const wxString &key = static_cast<VariableListClientData*>(lstVars->GetClientObject(i))->key;
-        //  ERG     if (!key.IsEmpty())
-        //  ERG     {
-        //  ERG         CustomVarAction Action = {CVA_Remove, key, wxEmptyString};
-        //  ERG         m_CustomVarActions.push_back(Action);
-        //  ERG     }
-        //  ERG }
-        //  ERG lstVars->Clear();
         m_VarsWxCtrl->DeleteAllItems();                                                             // this will update the wxDataViewListStore too
         m_bDirty = true;
     }

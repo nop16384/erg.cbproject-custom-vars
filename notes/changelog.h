@@ -29,4 +29,12 @@ commit eaa6a3fb252e9320a52fc71f6f497667821c12e1
     - refactor : m_VarsInactive -> m_InactiveVars
     - m_Vars and m_InactiveVars pased to CustomVarHash
     - worked around wxSmith contrib * BUG * in build system : build wxsmith !
-
+----------------------------------------------------------------------------------------------------
+commit f504221aeab80d98747667e6aa71e3935549403d ( master <- typedef-CustomVar )
+----------------------------------------------------------------------------------------------------
+2019.11.24
+    - branch comment-CustomVar created
+    [comment-CustomVar]
+    - added comments on vars
+    - some commented original code was removed because the new code seems to be stable, dont need
+      to keep it anymore
