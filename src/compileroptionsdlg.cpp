@@ -596,6 +596,8 @@ void CompilerOptionsDlg::DoFillVars()
     if ( ( ! va ) || ( ! vi ) )
         return;
 
+    m_VarsWxModel->DeleteAllItems();
+
     for (CustomVarHash::const_iterator it = va->begin(); it != va->end(); ++it)
         WxModelAddVarHelper(true, it->first, it->second.value, it->second.comment);
 
@@ -2137,7 +2139,7 @@ void CompilerOptionsDlg::WxModelShowComment(int _i_row)
     //  ............................................................................................
     m_VarsWxModel->GetValueByRow(vc, _i_row, 3);
 
-    com = vc.GetString();
+    com= vc.GetString();
 
     XRCCTRL(*this, "VarComment", wxTextCtrl)->ChangeValue( com );
 }
@@ -2183,10 +2185,10 @@ void CompilerOptionsDlg::OnVarListSelChanged(cb_unused wxDataViewEvent& event)
 
 void CompilerOptionsDlg::OnTextEvent(cb_unused wxCommandEvent& event)
 {
-    if ( event.GetId() == XRCID("VarComment") )
-    {
-        printf("Var comment changed\n");
-    }
+    //if ( event.GetId() == XRCID("VarComment") )
+    //{
+        //printf("Var comment changed\n");
+    //}
 }
 //  ................................................................................................    ERG-
 void CompilerOptionsDlg::OnRemoveVarClick(cb_unused wxCommandEvent& event)
@@ -2888,8 +2890,9 @@ void CompilerOptionsDlg::OnUpdateUI(cb_unused wxUpdateUIEvent& event)
 
     // add/browse/delete/clear vars
     en = ( m_VarsWxCtrl->GetSelectedItemsCount() > 0 );
-    XRCCTRL(*this, "btnBrowseVar"       , wxButton)->Enable(en);
-    XRCCTRL(*this, "btnDeleteVar"       , wxButton)->Enable(en);
+    XRCCTRL(*this, "btnBrowseVar"       , wxButton  )->Enable(en);
+    XRCCTRL(*this, "btnDeleteVar"       , wxButton  )->Enable(en);
+    XRCCTRL(*this, "VarComment"         , wxTextCtrl)->Enable(en);
     en = ( m_VarsWxModel->GetItemCount() > 0 );
     XRCCTRL(*this, "btnDeleteAllVars"   , wxButton)->Enable(en);
     //  ............................................................................................    ERG+

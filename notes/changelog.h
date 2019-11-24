@@ -38,3 +38,4 @@ commit f504221aeab80d98747667e6aa71e3935549403d ( master <- typedef-CustomVar )
     - added comments on vars
     - some commented original code was removed because the new code seems to be stable, dont need
       to keep it anymore
+    - correcected bug ( todo 009 )

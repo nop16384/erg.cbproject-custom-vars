@@ -29,6 +29,8 @@
 +(007)  2019.11.21  Remove _ERG_CORR_ , _ERG_TODO_ from published files
 
 +(008)  2019.11.21  Add default sorting by name
+
+ (009)  2019.11.24  BUG when switching target, vars are just added. No cleanup is done.
 //  ############################################################################
 (001)   2019.11.17  Done properly. Just modify the xrc file.
 
@@ -51,3 +53,5 @@
     5   2019.11.21  Will do that from now
     6   2019.11.20  Was accepted by obfuscated
     7
+
+ (009)  2019.11.24  Done, m_VarsWxModel->DeleteAllItems() in DoFillVars()
