@@ -143,12 +143,12 @@ class DLLIMPORT CompileOptionsBase
         virtual void UnsetAllVars();
         virtual bool HasVar(const wxString& key) const;
         virtual const wxString& GetVar(const wxString& key) const;
-        virtual const StringHash& GetAllVars() const;
+        virtual const CustomVarHash& GetAllVars() const;
         //  ........................................................................................    ERG+
-        virtual bool SetInactiveVar(const wxString& _i_key, const wxString& _i_val);    //!< add an inactive CustomVar
-        virtual bool UnsetInactiveVar(const wxString& _i_key);                          //!< del an inactive CustomVar
-        virtual void UnsetAllInactiveVars();                                            //!< del all inactive CustomVars
-        virtual const CustomVarHash& GetAllInactiveVars() const;                           //!< get all inactive CustomVars
+        virtual bool SetInactiveVar(const wxString& _i_key, const wxString& _i_val);                //!< add an inactive CustomVar
+        virtual bool UnsetInactiveVar(const wxString& _i_key);                                      //!< del an inactive CustomVar
+        virtual void UnsetAllInactiveVars();                                                        //!< del all inactive CustomVars
+        virtual const CustomVarHash& GetAllInactiveVars() const;                                    //!< get all inactive CustomVars
         //  ........................................................................................    ERG-
     protected:
         int m_Platform;
@@ -166,10 +166,11 @@ class DLLIMPORT CompileOptionsBase
         bool m_Modified;
         bool m_AlwaysRunPostCmds;
         //  ........................................................................................    ERG+
-        StringHash      m_Vars;                                                                     //!< map for active CustomVars
+        CustomVarHash   m_ActiveVars;                                                               //!< map for active CustomVars
         CustomVarHash   m_InactiveVars;                                                             //!< map for inactive CustomVars
         //  ........................................................................................    ERG+
     private:
+        bool PSetVar(wxString const & _i_key, wxString const & _i_val, int _i_flags, wxString const & _i_comment, bool _i_only_if_exists); //!< really set var
 };
 
 #endif // COMPILEOPTIONSBASE_H

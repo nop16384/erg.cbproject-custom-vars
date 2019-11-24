@@ -1220,14 +1220,14 @@ static void SaveEnvironment(TiXmlElement* parent, CompileOptionsBase* base)
     //  ERG const StringHash& v = base->GetAllVars();
     //  ERG if (v.empty())
     //  ERG   return;
-    StringHash      const   &   v   =   base->GetAllVars();
+    CustomVarHash   const   &   va  =   base->GetAllVars();
     CustomVarHash   const   &   vi  =   base->GetAllInactiveVars();
     //  ............................................................................................    ERG-
     // explicitly sort the keys
     typedef std::map<wxString, wxString> SortedMap;
-    SortedMap map;
-    for (StringHash::const_iterator it = v.begin(); it != v.end(); ++it)
-        map[it->first] = it->second;
+    SortedMap mapa;
+    for (CustomVarHash::const_iterator it = va.begin(); it != va.end(); ++it)
+        mapa[it->first] = it->second.value;
     //  ............................................................................................    ERG+
     SortedMap mapi;
     for (CustomVarHash::const_iterator it = vi.begin(); it != vi.end(); ++it)
@@ -1240,7 +1240,7 @@ static void SaveEnvironment(TiXmlElement* parent, CompileOptionsBase* base)
     //  ERG   TiXmlElement* elem = AddElement(node, "Variable", "name", it->first);
     //  ERG   elem->SetAttribute("value", cbU2C(it->second));
     //  ERG }
-    for (SortedMap::const_iterator it = map.begin(); it != map.end(); ++it)
+    for (SortedMap::const_iterator it = mapa.begin(); it != mapa.end(); ++it)
     {
         TiXmlElement* elem = AddElement(node, "Variable", "name", it->first);
         elem->SetAttribute("value", cbU2C(it->second));

@@ -568,7 +568,7 @@ void CompilerOptionsDlg::WxModelAddVarHelper(wxString const& _i_key, wxString co
 //  ................................................................................................    ERG-
 void CompilerOptionsDlg::DoFillVars()
 {
-    const StringHash            *   va      =   0;
+    const CustomVarHash         *   va      =   0;
     const CustomVarHash         *   vi      =   0;
     const CompileOptionsBase    *   base    =   GetVarsOwner();
     //  ............................................................................................
@@ -580,8 +580,8 @@ void CompilerOptionsDlg::DoFillVars()
     if ( ( ! va ) || ( ! vi ) )
         return;
 
-    for (StringHash::const_iterator it = va->begin(); it != va->end(); ++it)
-        WxModelAddVarHelper(it->first, it->second, true);
+    for (CustomVarHash::const_iterator it = va->begin(); it != va->end(); ++it)
+        WxModelAddVarHelper(it->first, it->second.value, true);
 
     for (CustomVarHash::const_iterator it = vi->begin(); it != vi->end(); ++it)
         WxModelAddVarHelper(it->first, it->second.value, false);

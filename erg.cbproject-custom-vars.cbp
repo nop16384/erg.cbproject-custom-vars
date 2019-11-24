@@ -129,6 +129,11 @@
 			<Option virtualFolder="src/" />
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="src/compiler.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+			<Option virtualFolder="src/" />
+		</Unit>
 		<Unit filename="src/compiler_options.xrc">
 			<Option virtualFolder="src/" />
 			<Option target="&lt;{~None~}&gt;" />
@@ -142,6 +147,11 @@
 		<Unit filename="src/compileroptionsdlg.h">
 			<Option virtualFolder="src/" />
 			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/macrosmanager.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+			<Option virtualFolder="src/" />
 		</Unit>
 		<Unit filename="src/projectloader.cpp">
 			<Option compile="0" />

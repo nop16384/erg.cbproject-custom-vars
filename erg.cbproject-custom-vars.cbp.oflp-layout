@@ -12,8 +12,10 @@
 	<File name="notes/todo.h" uid="019039024000809" />
 	<File name="src/compileoptionsbase.cpp" uid="019039024000809" />
 	<File name="src/compileoptionsbase.h" uid="019039024000809" />
+	<File name="src/compiler.cpp" uid="019039024000809" />
 	<File name="src/compiler_options.xrc" uid="019039024000809" />
 	<File name="src/compileroptionsdlg.cpp" uid="019039024000809" />
 	<File name="src/compileroptionsdlg.h" uid="019039024000809" />
+	<File name="src/macrosmanager.cpp" uid="019039024000809" />
 	<File name="src/projectloader.cpp" uid="019039024000809" />
 </CodeBlocks_project_oflp_file>

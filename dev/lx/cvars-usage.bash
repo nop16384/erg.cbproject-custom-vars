@@ -18,7 +18,7 @@ AdCbTrunk="$2"
 ListA="SetVar         UnsetVar         UnsetAllVars         HasVar GetVar GetAllVars"
 ListI="SetInactiveVar UnsetInactiveVar UnsetAllInactiveVars               GetAllInactiveVars"
 List="${ListA} ${ListI}"
-List="SetVar"
+List="SetDefinitionFileFilename"
 #   ------------------------------------------------------------------------------------------------
 if [[ -z "${AdCbProject}" ]] ; then
     echo "> Parameter #1 'AdCbProject' not defined."

@@ -23,3 +23,10 @@ commit eaa6a3fb252e9320a52fc71f6f497667821c12e1
 2019.11.22
     - added file notes/notes.h
     - added lx scripts for finding strings among all C::B code
+2019.11.24
+    - branch typedef-CustomVar created
+    [typedef-CustomVar]
+    - refactor : m_VarsInactive -> m_InactiveVars
+    - m_Vars and m_InactiveVars pased to CustomVarHash
+    - worked around wxSmith contrib * BUG * in build system : build wxsmith !
+
