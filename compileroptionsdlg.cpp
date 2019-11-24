@@ -551,23 +551,25 @@ void CompilerOptionsDlg::WxModelAddVarHelper(wxString const& _i_key, wxString co
 }
 void CompilerOptionsDlg::DoFillVars()
 {
-    const StringHash            *   va      =   0;
-    const StringHash            *   vi      =   0;
+    const CustomVarHash         *   va      =   0;
+    const CustomVarHash         *   vi      =   0;
     const CompileOptionsBase    *   base    =   GetVarsOwner();
     //  ............................................................................................
     if ( ! base )
         return;
 
     va  =   &base->GetAllVars();
-    vi  =   &base->GetAllVarsInactive();
+    vi  =   &base->GetAllInactiveVars();
     if ( ( ! va ) || ( ! vi ) )
         return;
 
-    for (StringHash::const_iterator it = va->begin(); it != va->end(); ++it)
-        WxModelAddVarHelper(it->first, it->second, true);
+    m_VarsWxModel->DeleteAllItems();
 
-    for (StringHash::const_iterator it = vi->begin(); it != vi->end(); ++it)
-        WxModelAddVarHelper(it->first, it->second, false);
+    for (CustomVarHash::const_iterator it = va->begin(); it != va->end(); ++it)
+        WxModelAddVarHelper(it->first, it->second.value, true);
+
+    for (CustomVarHash::const_iterator it = vi->begin(); it != vi->end(); ++it)
+        WxModelAddVarHelper(it->first, it->second.value, false);
 } // DoFillVars
 
 void CompilerOptionsDlg::DoFillOthers()
@@ -1190,7 +1192,7 @@ void CompilerOptionsDlg::DoSaveVars()
         return;
 
     base->UnsetAllVars();
-    base->UnsetAllVarsInactive();
+    base->UnsetAllInactiveVars();
 
     for ( unsigned int ridx = 0 ; ridx != m_VarsWxModel->GetItemCount() ; ridx++ )
     {
@@ -1206,7 +1208,7 @@ void CompilerOptionsDlg::DoSaveVars()
         if ( active )
             base->SetVar(key, val);
         else
-            base->SetVarInactive(key, val);
+            base->SetInactiveVar(key, val);
     }
 } // DoSaveVars
 

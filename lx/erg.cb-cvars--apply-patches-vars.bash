@@ -1,4 +1,4 @@
-FilesCard=6
+FilesCard=8
 FPatch[0]=erg.cb-cvars--patch--compileoptionsbase.h
   FDst[0]=src/include/compileoptionsbase.h
 FPatch[1]=erg.cb-cvars--patch--compileoptionsbase.cpp
@@ -11,3 +11,7 @@ FPatch[4]=erg.cb-cvars--patch--compileroptionsdlg.cpp
   FDst[4]=src/plugins/compilergcc/compileroptionsdlg.cpp
 FPatch[5]=erg.cb-cvars--patch--compiler_options.xrc
   FDst[5]=src/plugins/compilergcc/resources/compiler_options.xrc
+FPatch[6]=erg.cb-cvars--patch--compiler.cpp
+  FDst[6]=src/sdk/compiler.cpp
+FPatch[7]=erg.cb-cvars--patch--macrosmanager.cpp
+  FDst[7]=src/sdk/macrosmanager.cpp

@@ -520,28 +520,37 @@ void CompileOptionsBase::RemoveBuildScript(const wxString& script)
     }
 }
 
-bool CompileOptionsBase::SetVar(const wxString& key, const wxString& value, bool onlyIfExists)
+bool CompileOptionsBase::PSetVar(wxString const & _i_key, wxString const & _i_val, int _i_flags, wxString const & _i_comment, bool _i_only_if_exists)
 {
-    if (onlyIfExists)
+    CustomVarHash   &   cvh = ( _i_flags & eVarActive ) ? m_ActiveVars : m_InactiveVars;
+    CustomVar           cv  = { _i_val, _i_comment, _i_flags };
+    //  ............................................................................................
+    if ( _i_only_if_exists )
     {
-        StringHash::iterator it = m_Vars.find(key);
-        if (it == m_Vars.end())
+        CustomVarHash::iterator it = cvh.find(_i_key);
+        if (it == cvh.end())
             return false;
-        it->second = value;
+        it->second = cv;
+        SetModified(true);                                                                          // _ERG_CORR_ added, was missing
         return true;
     }
 
-    m_Vars[key] = value;
+    cvh[_i_key] = cv;
     SetModified(true);
     return true;
 }
 
+bool CompileOptionsBase::SetVar(const wxString& key, const wxString& value, bool onlyIfExists)
+{
+    return PSetVar(key, value, eVarActive, wxString(""), onlyIfExists);
+}
+
 bool CompileOptionsBase::UnsetVar(const wxString& key)
 {
-    StringHash::iterator it = m_Vars.find(key);
-    if (it != m_Vars.end())
+    CustomVarHash::iterator it = m_ActiveVars.find(key);
+    if (it != m_ActiveVars.end())
     {
-        m_Vars.erase(it);
+        m_ActiveVars.erase(it);
         SetModified(true);
         return true;
     }
@@ -551,13 +560,13 @@ bool CompileOptionsBase::UnsetVar(const wxString& key)
 void CompileOptionsBase::UnsetAllVars()
 {
     SetModified(true);                                                                              // _ERG_CORR_ added, was missing
-    m_Vars.clear();
+    m_ActiveVars.clear();
 }
 
 bool CompileOptionsBase::HasVar(const wxString& key) const
 {
-    StringHash::const_iterator it = m_Vars.find(key);
-    if (it != m_Vars.end())
+    CustomVarHash::const_iterator it = m_ActiveVars.find(key);
+    if (it != m_ActiveVars.end())
         return true;
 
     return false;
@@ -565,46 +574,46 @@ bool CompileOptionsBase::HasVar(const wxString& key) const
 
 const wxString& CompileOptionsBase::GetVar(const wxString& key) const
 {
-    StringHash::const_iterator it = m_Vars.find(key);
-    if (it != m_Vars.end())
-        return it->second;
+    CustomVarHash::const_iterator it = m_ActiveVars.find(key);
+    if (it != m_ActiveVars.end())
+        return it->second.value;
 
     static wxString emptystring = wxEmptyString;
     return emptystring;
 }
 
-const StringHash& CompileOptionsBase::GetAllVars() const
+const CustomVarHash& CompileOptionsBase::GetAllVars() const
 {
-    return m_Vars;
-}
-bool CompileOptionsBase::SetVarInactive(const wxString& _i_key, const wxString& _i_val)
-{
-    m_VarsInactive[_i_key] = _i_val;
-    SetModified(true);
-    return true;
+    return m_ActiveVars;
 }
 
-bool CompileOptionsBase::UnsetVarInactive(const wxString& _i_key)
+bool CompileOptionsBase::SetInactiveVar(const wxString& _i_key, const wxString& _i_val)
 {
-    StringHash::iterator it = m_VarsInactive.find(_i_key);
-    if (it != m_VarsInactive.end())
+    return PSetVar(_i_key, _i_val, eVarInactive, wxString(""), false);
+}
+
+bool CompileOptionsBase::UnsetInactiveVar(const wxString& _i_key)
+{
+    CustomVarHash::iterator it = m_InactiveVars.find(_i_key);
+
+    if (it != m_InactiveVars.end())
     {
-        m_VarsInactive.erase(it);
+        m_InactiveVars.erase(it);
         SetModified(true);
         return true;
     }
     return false;
 }
 
-void CompileOptionsBase::UnsetAllVarsInactive()
+void CompileOptionsBase::UnsetAllInactiveVars()
 {
     SetModified(true);
-    m_VarsInactive.clear();
+    m_InactiveVars.clear();
 }
 
-StringHash const & CompileOptionsBase::GetAllVarsInactive() const
+CustomVarHash const & CompileOptionsBase::GetAllInactiveVars() const
 {
-    return m_VarsInactive;
+    return m_InactiveVars;
 }
 void CompileOptionsBase::SetLinkerExecutable(LinkerExecutableOption option)
 {

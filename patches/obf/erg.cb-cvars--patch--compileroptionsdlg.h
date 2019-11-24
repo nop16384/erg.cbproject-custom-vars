@@ -1,5 +1,5 @@
 --- src/plugins/compilergcc/compileroptionsdlg.h	2019-11-21 19:02:13.002455651 +0100
-+++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/compileroptionsdlg.h	2019-11-22 21:37:39.067631865 +0100
++++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/compileroptionsdlg.h	2019-11-24 18:51:41.801795774 +0100
 @@ -24,6 +24,9 @@
  class wxPropertyGrid;
  class wxPropertyGridEvent;

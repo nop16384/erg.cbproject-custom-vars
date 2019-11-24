@@ -1,5 +1,5 @@
 --- src/plugins/compilergcc/compileroptionsdlg.cpp	2019-11-17 10:20:39.246021554 +0100
-+++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/compileroptionsdlg.cpp	2019-11-22 21:37:39.075631855 +0100
++++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/compileroptionsdlg.cpp	2019-11-24 18:51:41.809795806 +0100
 @@ -27,6 +27,7 @@
      #include <wx/textdlg.h>
      #include <wx/treectrl.h>
@@ -87,7 +87,7 @@
      if (m_pProject)
      {
          bool hasBuildScripts = m_pProject->GetBuildScripts().GetCount() != 0;
-@@ -511,25 +539,35 @@
+@@ -511,25 +539,37 @@
      ArrayString2ListBox(extraPaths, XRCCTRL(*this, "lstExtraPaths", wxListBox));
  } // DoFillCompilerPrograms
  
@@ -105,8 +105,8 @@
  {
 -    wxListBox* lst = XRCCTRL(*this, "lstVars", wxListBox);
 -    if (!lst)
-+    const StringHash            *   va      =   0;
-+    const StringHash            *   vi      =   0;
++    const CustomVarHash         *   va      =   0;
++    const CustomVarHash         *   vi      =   0;
 +    const CompileOptionsBase    *   base    =   GetVarsOwner();
 +    //  ............................................................................................
 +    if ( ! base )
@@ -121,7 +121,7 @@
 -    if (!vars)
 +
 +    va  =   &base->GetAllVars();
-+    vi  =   &base->GetAllVarsInactive();
++    vi  =   &base->GetAllInactiveVars();
 +    if ( ( ! va ) || ( ! vi ) )
          return;
 -    for (StringHash::const_iterator it = vars->begin(); it != vars->end(); ++it)
@@ -130,15 +130,17 @@
 -        lst->Append(text, new VariableListClientData(it->first, it->second));
 -    }
 +
-+    for (StringHash::const_iterator it = va->begin(); it != va->end(); ++it)
-+        WxModelAddVarHelper(it->first, it->second, true);
++    m_VarsWxModel->DeleteAllItems();
 +
-+    for (StringHash::const_iterator it = vi->begin(); it != vi->end(); ++it)
-+        WxModelAddVarHelper(it->first, it->second, false);
++    for (CustomVarHash::const_iterator it = va->begin(); it != va->end(); ++it)
++        WxModelAddVarHelper(it->first, it->second.value, true);
++
++    for (CustomVarHash::const_iterator it = vi->begin(); it != vi->end(); ++it)
++        WxModelAddVarHelper(it->first, it->second.value, false);
  } // DoFillVars
  
  void CompilerOptionsDlg::DoFillOthers()
-@@ -1146,38 +1184,29 @@
+@@ -1146,38 +1186,29 @@
  
  void CompilerOptionsDlg::DoSaveVars()
  {
@@ -150,7 +152,7 @@
 +        return;
 +
 +    base->UnsetAllVars();
-+    base->UnsetAllVarsInactive();
++    base->UnsetAllInactiveVars();
 +
 +    for ( unsigned int ridx = 0 ; ridx != m_VarsWxModel->GetItemCount() ; ridx++ )
      {
@@ -195,11 +197,11 @@
 +        if ( active )
 +            base->SetVar(key, val);
 +        else
-+            base->SetVarInactive(key, val);
++            base->SetInactiveVar(key, val);
      }
  } // DoSaveVars
  
-@@ -2026,89 +2055,59 @@
+@@ -2026,89 +2057,59 @@
          key.Trim(true).Trim(false);
          value.Trim(true).Trim(false);
          QuoteString(value, _("Add variable quote string"));
@@ -313,7 +315,7 @@
  
  void CompilerOptionsDlg::OnSetDefaultCompilerClick(cb_unused wxCommandEvent& event)
  {
-@@ -2771,11 +2770,13 @@
+@@ -2771,11 +2772,13 @@
      }
  
      // add/edit/delete/clear vars
@@ -331,7 +333,7 @@
      // policies
      wxTreeCtrl* tc = XRCCTRL(*this, "tcScope", wxTreeCtrl);
      ScopeTreeData* data = (ScopeTreeData*)tc->GetItemData(tc->GetSelection());
-@@ -2908,7 +2909,7 @@
+@@ -2908,7 +2911,7 @@
  
      const wxChar* str_libs[4] = { _T("btnEditLib"),  _T("btnAddLib"),  _T("btnDelLib"),     _T("btnClearLib")   };
      const wxChar* str_dirs[4] = { _T("btnEditDir"),  _T("btnAddDir"),  _T("btnDelDir"),     _T("btnClearDir")   };
@@ -340,7 +342,7 @@
      const wxChar* str_xtra[4] = { _T("btnExtraEdit"),_T("btnExtraAdd"),_T("btnExtraDelete"),_T("btnExtraClear") };
  
      if (keycode == WXK_RETURN || keycode == WXK_NUMPAD_ENTER)
-@@ -2927,8 +2928,8 @@
+@@ -2927,8 +2930,8 @@
          { myid =  wxXmlResource::GetXRCID(str_libs[myidx]); }
      else if (id == XRCID("lstIncludeDirs") || id == XRCID("lstLibDirs") || id == XRCID("lstResDirs")) // Directories
          { myid =  wxXmlResource::GetXRCID(str_dirs[myidx]); }

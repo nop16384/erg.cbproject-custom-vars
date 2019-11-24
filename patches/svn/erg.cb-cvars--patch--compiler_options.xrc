@@ -1,5 +1,5 @@
 --- src/plugins/compilergcc/resources/compiler_options.xrc	2019-11-17 10:20:39.246021554 +0100
-+++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/compiler_options.xrc	2019-11-22 21:37:39.087631842 +0100
++++ /home/gwr/Src/C-C++/codeblocks/erg.cbproject-custom-vars/branch-master/out/pub/compiler_options.xrc	2019-11-24 18:51:41.817795838 +0100
 @@ -972,19 +972,6 @@
  											<object class="wxBoxSizer">
  												<orient>wxVERTICAL</orient>
