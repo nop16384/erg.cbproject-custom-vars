@@ -29,4 +29,9 @@ commit eaa6a3fb252e9320a52fc71f6f497667821c12e1
     - refactor : m_VarsInactive -> m_InactiveVars
     - m_Vars and m_InactiveVars pased to CustomVarHash
     - worked around wxSmith contrib * BUG * in build system : build wxsmith !
+    [master]
+    - corrected bug ( see [typedef-CustomVar]::todo 009 )
+----------------------------------------------------------------------------------------------------
+commit
+----------------------------------------------------------------------------------------------------
 

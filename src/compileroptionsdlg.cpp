@@ -580,6 +580,8 @@ void CompilerOptionsDlg::DoFillVars()
     if ( ( ! va ) || ( ! vi ) )
         return;
 
+    m_VarsWxModel->DeleteAllItems();
+
     for (CustomVarHash::const_iterator it = va->begin(); it != va->end(); ++it)
         WxModelAddVarHelper(it->first, it->second.value, true);
 
