@@ -9,6 +9,7 @@
 	<File name="build/lx/erg.cb-cvars--apply-patches.bash" uid="019039024000809" />
 	<File name="dev/lx/cvars-usage.awk" uid="019039024000809" />
 	<File name="dev/lx/cvars-usage.bash" uid="019039024000809" />
+	<File name="notes/notes.h" uid="019039024000809" />
 	<File name="notes/todo.h" uid="019039024000809" />
 	<File name="src/compileoptionsbase.cpp" uid="019039024000809" />
 	<File name="src/compileoptionsbase.h" uid="019039024000809" />

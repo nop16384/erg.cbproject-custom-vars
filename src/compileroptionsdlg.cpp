@@ -261,7 +261,7 @@ CompilerOptionsDlg::CompilerOptionsDlg(wxWindow* parent, CompilerGCC* compiler, 
     int             colflags    =   wxDATAVIEW_COL_RESIZABLE | wxDATAVIEW_COL_SORTABLE;
     size_t          idx         =   0;
 
-    m_PreviouslySelectedRow     =   wxNOT_FOUND;                                                    // reset at each config invocation
+    m_VarsPrevSelModRow         =   wxNOT_FOUND;                                                    // reset at each config invocation
 
     m_VarsWxCtrl    =   new wxDataViewListCtrl  (w1, wxID_ANY);
     m_VarsWxModel   =   new wxDataViewListStore ();
@@ -285,13 +285,14 @@ CompilerOptionsDlg::CompilerOptionsDlg(wxWindow* parent, CompilerGCC* compiler, 
     sizerflags.Expand().Proportion(3);  // sizeritem for ID_STATICTEXT16 "These variables... " has wxEXPAND so we need to set Proportion
     sizerflags.Border(wxALL, 8);
 
-    wxTextCtrl *    tc = XRCCTRL(*this, "VarComment", wxTextCtrl);
+    wxTextCtrl *    tc = XRCCTRL(*this, "txtComment", wxTextCtrl);
     wxTextAttr      tcs;
     wxColour        tcc(0x88, 0x88, 0x88);
 
-    tcs.SetTextColour(tcc);                                                                         // _ERG_TODO_ does not work
-    tcs.SetFlags( wxTEXT_ATTR_TEXT_COLOUR );
+    tcs.SetTextColour(tcc);
+    tcs.SetFlags( wxTEXT_ATTR_TEXT_COLOUR );                                                        // set color for wxTextCtrl->AppendText()
     tc->SetDefaultStyle( tcs );
+    tc->wxControl::SetForegroundColour(tcc);                                                        // set color for user input
 
     bsz->Insert(idx, m_VarsWxCtrl, sizerflags);
 
@@ -1558,6 +1559,9 @@ void CompilerOptionsDlg::OnTreeSelectionChange(wxTreeEvent& event)
 {
     if (m_BuildingTree)
         return;
+    //  --------------------------------------------------------------------------------------------    ERG+
+    m_VarsPrevSelModRow = wxNOT_FOUND;                                                              // reset when another target is selected
+    //  --------------------------------------------------------------------------------------------    ERG-
     wxTreeCtrl* tc = XRCCTRL(*this, "tcScope", wxTreeCtrl);
     ScopeTreeData* data = (ScopeTreeData*)tc->GetItemData(event.GetItem());
     if (!data)
@@ -2127,7 +2131,7 @@ void CompilerOptionsDlg::WxModelSaveComment(int _i_row)
 {
     wxString com;
     //  ............................................................................................
-    com = XRCCTRL(*this, "VarComment", wxTextCtrl)->GetValue();
+    com = XRCCTRL(*this, "txtComment", wxTextCtrl)->GetValue();
 
     m_VarsWxModel->SetValueByRow(com, _i_row, 3);  // store value in the model
 }
@@ -2141,7 +2145,7 @@ void CompilerOptionsDlg::WxModelShowComment(int _i_row)
 
     com= vc.GetString();
 
-    XRCCTRL(*this, "VarComment", wxTextCtrl)->ChangeValue( com );
+    XRCCTRL(*this, "txtComment", wxTextCtrl)->ChangeValue( com );
 }
 
 void CompilerOptionsDlg::OnVarListVarChanged(cb_unused wxDataViewEvent& event)
@@ -2163,32 +2167,36 @@ void CompilerOptionsDlg::OnVarListSelChanged(cb_unused wxDataViewEvent& event)
     if ( ! base )
         return;
     //  ............................................................................................
-    //  save value of previously selected row
-    if ( m_PreviouslySelectedRow != wxNOT_FOUND )
+    //  save comment of previously selected row
+    if ( m_VarsPrevSelModRow != wxNOT_FOUND )
     {
-        WxModelSaveComment(m_PreviouslySelectedRow);
+        WxModelSaveComment(m_VarsPrevSelModRow);
     }
     //  ............................................................................................
-    //  show value of newly selected row
+    //  show comment of newly selected row
 
     //  wxDataViewListCtrl->GetSelectedRow() gives the index * in the model * of the selected row,
     //  not the the row's visual index in the control ! ...
     nmrow = m_VarsWxCtrl->GetSelectedRow();
-    if ( nmrow == wxNOT_FOUND )                                                                     // should not happend at all
+    if ( nmrow == wxNOT_FOUND )                                                                     // this happend when switching target, because
+    {                                                                                               //   in that case no row will be selected ;
+        XRCCTRL(*this, "txtComment", wxTextCtrl)->Clear();                                          //   so erase the comment.
         return;
+    }
 
     //  ... so wxDataViewListStore->GetValueByRow() can be used directly on it !
     WxModelShowComment(nmrow);
 
-    m_PreviouslySelectedRow = nmrow;                                                                // memorize the selected model's row
+    m_VarsPrevSelModRow = nmrow;                                                                    // memorize the selected model's row
 }
 
 void CompilerOptionsDlg::OnTextEvent(cb_unused wxCommandEvent& event)
 {
-    //if ( event.GetId() == XRCID("VarComment") )
-    //{
+    if ( event.GetId() == XRCID("txtComment") )
+    {
         //printf("Var comment changed\n");
-    //}
+        m_bDirty = true;
+    }
 }
 //  ................................................................................................    ERG-
 void CompilerOptionsDlg::OnRemoveVarClick(cb_unused wxCommandEvent& event)
@@ -2892,7 +2900,7 @@ void CompilerOptionsDlg::OnUpdateUI(cb_unused wxUpdateUIEvent& event)
     en = ( m_VarsWxCtrl->GetSelectedItemsCount() > 0 );
     XRCCTRL(*this, "btnBrowseVar"       , wxButton  )->Enable(en);
     XRCCTRL(*this, "btnDeleteVar"       , wxButton  )->Enable(en);
-    XRCCTRL(*this, "VarComment"         , wxTextCtrl)->Enable(en);
+    XRCCTRL(*this, "txtComment"         , wxTextCtrl)->Enable(en);
     en = ( m_VarsWxModel->GetItemCount() > 0 );
     XRCCTRL(*this, "btnDeleteAllVars"   , wxButton)->Enable(en);
     //  ............................................................................................    ERG+

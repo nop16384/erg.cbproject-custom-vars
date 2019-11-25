@@ -130,7 +130,7 @@ class CompilerOptionsDlg : public cbConfigurationPanel
         //  ........................................................................................    ERG+
         wxDataViewListCtrl      *   m_VarsWxCtrl;
         wxDataViewListStore     *   m_VarsWxModel;
-        int                         m_PreviouslySelectedRow;        //!< used to store comment value to WxDataViewListStore when selection changes
+        int                         m_VarsPrevSelModRow;            //!< model's row that was selected before the currently selected model's row
         //  ........................................................................................    ERG-
         int                          m_CurrentCompilerIdx;
         cbProject*                   m_pProject;

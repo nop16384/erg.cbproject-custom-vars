@@ -1003,7 +1003,7 @@
 												</object>
                                                 -->
 												<object class="sizeritem">                          <!-- wxTextCtrl for editing var comments -->
-													<object class="wxTextCtrl" name="VarComment">
+													<object class="wxTextCtrl" name="txtComment">
 														<style>wxTE_MULTILINE|wxTE_DONTWRAP|wxVSCROLL|wxHSCROLL</style>
 													</object>
 													<flag>wxLEFT|wxRIGHT|wxEXPAND</flag>
