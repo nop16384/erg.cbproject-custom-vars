@@ -915,13 +915,20 @@ void ProjectLoader::DoEnvironment(TiXmlElement* parentNode, CompileOptionsBase* 
             //  active var <=> attribute "active" is present
             wxString    name    = cbC2U(child->Attribute("name"));
             wxString    value   = cbC2U(child->Attribute("value"));
+            wxString    comment = cbC2U(child->Attribute("comment"));
             bool        active  = ( child->Attribute("active") != NULL ) ? true : false;
             if (!name.IsEmpty())
             {
                 if ( active )
+                {
                     base->SetVar(name, UnixFilename(value));
+                    base->SetVarComment(name, CompileOptionsBase::eVarActive, comment);
+                }
                 else
+                {
                     base->SetInactiveVar(name, UnixFilename(value));
+                    base->SetVarComment(name, CompileOptionsBase::eVarInactive, comment);
+                }
             }
             //  ....................................................................................    ERG+
 
@@ -1226,14 +1233,34 @@ static void SaveEnvironment(TiXmlElement* parent, CompileOptionsBase* base)
     // explicitly sort the keys
     typedef std::map<wxString, wxString> SortedMap;
     SortedMap mapa;
-    for (CustomVarHash::const_iterator it = va.begin(); it != va.end(); ++it)
-        mapa[it->first] = it->second.value;
-    //  ............................................................................................    ERG+
     SortedMap mapi;
-    for (CustomVarHash::const_iterator it = vi.begin(); it != vi.end(); ++it)
-        mapi[it->first] = it->second.value;
-    //  ............................................................................................    ERG-
+
     TiXmlElement* node = AddElement(parent, "Environment");
+
+    for (CustomVarHash::const_iterator it = va.begin(); it != va.end(); ++it)
+    {
+        //mapa[it->first] = it->second.value;
+
+        TiXmlElement* elem = AddElement(node, "Variable", "name", it->first);
+        elem->SetAttribute("value", cbU2C(it->second.value));
+        //  active var <=> attribute "active" is present
+        elem->SetAttribute("active", "");
+        elem->SetAttribute("comment", cbU2C(it->second.comment));
+    }
+    //  ............................................................................................    ERG+
+    for (CustomVarHash::const_iterator it = vi.begin(); it != vi.end(); ++it)
+    {
+        //mapi[it->first] = it->second.value;
+
+        TiXmlElement* elem = AddElement(node, "Variable", "name", it->first);
+        elem->SetAttribute("value", cbU2C(it->second.value));
+        //  active var <=> attribute "active" is present
+        //elem->SetAttribute("inactive", "");
+        elem->SetAttribute("comment", cbU2C(it->second.comment));
+    }
+    return;
+    //  ............................................................................................    ERG-
+    //TiXmlElement* node = AddElement(parent, "Environment");
     //  ............................................................................................    ERG+
     //  ERG for (SortedMap::const_iterator it = map.begin(); it != map.end(); ++it)
     //  ERg {

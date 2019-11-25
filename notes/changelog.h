@@ -32,6 +32,18 @@ commit eaa6a3fb252e9320a52fc71f6f497667821c12e1
     [master]
     - corrected bug ( see [typedef-CustomVar]::todo 009 )
 ----------------------------------------------------------------------------------------------------
-commit
+commit f504221aeab80d98747667e6aa71e3935549403d ( master <- typedef-CustomVar )
 ----------------------------------------------------------------------------------------------------
-
+2019.11.24
+    - branch comment-CustomVar created
+    [comment-CustomVar]
+    - added comments on vars
+    - some commented original code was removed because the new code seems to be stable, dont need
+      to keep it anymore
+    - corrected bug (001)
+    - corrected comment color text for user input ( Dialog : tc->wxControl::SetForegroundColour(tc) )
+2019.11.25
+    [comment-CustomVar]
+    - corrected bugs (002) and (003)
+    - set m_bDirty when a comment has changed
+    - added file "bugs.h"

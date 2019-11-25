@@ -46,3 +46,17 @@ BUG
        -----------------------------------------------------
     => HAS TO COMPILE WXSMITH !!! ( but no wxcontrib is OK )
        -----------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+2019.11.25  BUG
+----------------------------------------------------------------------------------------------------
+events order :
+    1 EVT_TREE_SEL_CHANGING             [ OnTreeSelectionChanging() ]
+    2 EVT_TREE_SEL_CHANGED              [ OnTreeSelectionChange()   ]   -> call DoFillVars()
+    3 wxEVT_DATAVIEW_SELECTION_CHANGED
+
+com = XRCCTRL(*this, "VarComment", wxTextCtrl)->wxTextEntry::GetValue();    -> assert in gtk
+com = XRCCTRL(*this, "VarComment", wxTextCtrl)->GetValue();                 -> ok
+
+Why set m_VarsPrevSelModRow = wxNOT_FOUND in OnTreeSelectionChange() and not in DoFillVars() ?
+  because DoFillCompilerDependentSettings(), which calls DoFillVars(), is not called systematically.

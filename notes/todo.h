@@ -29,6 +29,14 @@
 +(007)  2019.11.21  Remove _ERG_CORR_ , _ERG_TODO_ from published files
 
 +(008)  2019.11.21  Add default sorting by name
+
+ (009)  2019.11.24  BUG (001)
+
+ (010)  2019.11.25  BUG (002)
+
+ (011)  2019.11.25  Set m_bDirty when comment has changed on at leat one var
+
+ (012)  2019.11.25  BUG (003)
 //  ############################################################################
 (001)   2019.11.17  Done properly. Just modify the xrc file.
 
@@ -51,3 +59,12 @@
     5   2019.11.21  Will do that from now
     6   2019.11.20  Was accepted by obfuscated
     7
+
+ (009)  2019.11.24  m_VarsWxModel->DeleteAllItems() in DoFillVars()
+
+ (010)  2019.11.25  set m_VarsPrevSelModRow = wxNOT_FOUND in OnTreeSelectionChange()
+
+ (011)  2019.11.25  In OnTextEvent()
+
+ (012)  2019.11.25  OnVarListSelChanged() is called with wxNOT_FOUND index when target is switched.
+    So clear the wxTextCtrl when it happens.

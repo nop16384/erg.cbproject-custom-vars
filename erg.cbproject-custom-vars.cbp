@@ -110,6 +110,9 @@
 		<Unit filename="dev/lx/cvars-usage.bash">
 			<Option virtualFolder="dev/lx/" />
 		</Unit>
+		<Unit filename="notes/bugs.h">
+			<Option virtualFolder="notes/" />
+		</Unit>
 		<Unit filename="notes/changelog.h">
 			<Option virtualFolder="notes/" />
 		</Unit>

@@ -2,35 +2,24 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="lx-dev" />
-	<File name="notes/todo.h" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="notes/notes.h" open="1" top="0" tabpos="20" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1466" topLine="0" />
+			<Cursor1 position="4034" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="src/compileroptionsdlg.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="6702" topLine="0" />
+			<Cursor1 position="6477" topLine="85" />
 		</Cursor>
 	</File>
-	<File name="build/lx/build.pub-svn.bash" open="1" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/compiler.cpp" open="1" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="525" topLine="0" />
+			<Cursor1 position="24078" topLine="530" />
 		</Cursor>
 		<Folding>
-			<Collapse line="1" />
-		</Folding>
-	</File>
-	<File name="notes/changelog.h" open="1" top="1" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1645" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/compileroptionsdlg.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="32744" topLine="225" />
-		</Cursor>
-		<Folding>
-			<Collapse line="569" />
+			<Collapse line="547" />
+			<Collapse line="607" />
+			<Collapse line="609" />
 		</Folding>
 	</File>
 	<File name="build/lx/build.pub.bash" open="1" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -48,115 +37,15 @@
 			<Collapse line="77" />
 		</Folding>
 	</File>
-	<File name="src/compileoptionsbase.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/projectloader.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="14212" topLine="167" />
+			<Cursor1 position="44225" topLine="75" />
 		</Cursor>
-		<Folding>
-			<Collapse line="0" />
-			<Collapse line="25" />
-			<Collapse line="30" />
-			<Collapse line="35" />
-			<Collapse line="43" />
-			<Collapse line="51" />
-			<Collapse line="59" />
-			<Collapse line="64" />
-			<Collapse line="76" />
-			<Collapse line="84" />
-			<Collapse line="89" />
-			<Collapse line="97" />
-			<Collapse line="102" />
-			<Collapse line="110" />
-			<Collapse line="115" />
-			<Collapse line="123" />
-			<Collapse line="128" />
-			<Collapse line="137" />
-			<Collapse line="146" />
-			<Collapse line="151" />
-			<Collapse line="160" />
-			<Collapse line="169" />
-			<Collapse line="174" />
-			<Collapse line="183" />
-			<Collapse line="192" />
-			<Collapse line="197" />
-			<Collapse line="206" />
-			<Collapse line="215" />
-			<Collapse line="220" />
-			<Collapse line="228" />
-			<Collapse line="233" />
-			<Collapse line="241" />
-			<Collapse line="246" />
-			<Collapse line="251" />
-			<Collapse line="259" />
-			<Collapse line="264" />
-			<Collapse line="269" />
-			<Collapse line="271" />
-			<Collapse line="278" />
-			<Collapse line="280" />
-			<Collapse line="287" />
-			<Collapse line="289" />
-			<Collapse line="296" />
-			<Collapse line="298" />
-			<Collapse line="305" />
-			<Collapse line="308" />
-			<Collapse line="315" />
-			<Collapse line="318" />
-			<Collapse line="325" />
-			<Collapse line="328" />
-			<Collapse line="335" />
-			<Collapse line="341" />
-			<Collapse line="347" />
-			<Collapse line="350" />
-			<Collapse line="357" />
-			<Collapse line="360" />
-			<Collapse line="367" />
-			<Collapse line="370" />
-			<Collapse line="377" />
-			<Collapse line="380" />
-			<Collapse line="387" />
-			<Collapse line="390" />
-			<Collapse line="397" />
-			<Collapse line="400" />
-			<Collapse line="407" />
-			<Collapse line="410" />
-			<Collapse line="417" />
-			<Collapse line="420" />
-			<Collapse line="427" />
-			<Collapse line="430" />
-			<Collapse line="437" />
-			<Collapse line="440" />
-			<Collapse line="447" />
-			<Collapse line="450" />
-			<Collapse line="457" />
-			<Collapse line="460" />
-			<Collapse line="467" />
-			<Collapse line="471" />
-			<Collapse line="478" />
-			<Collapse line="482" />
-			<Collapse line="489" />
-			<Collapse line="493" />
-			<Collapse line="500" />
-			<Collapse line="506" />
-			<Collapse line="512" />
-			<Collapse line="516" />
-			<Collapse line="544" />
-			<Collapse line="596" />
-			<Collapse line="600" />
-			<Collapse line="609" />
-			<Collapse line="615" />
-			<Collapse line="620" />
-			<Collapse line="627" />
-			<Collapse line="632" />
-			<Collapse line="639" />
-		</Folding>
 	</File>
-	<File name="src/compileoptionsbase.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="notes/todo.h" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="8033" topLine="0" />
+			<Cursor1 position="2410" topLine="8" />
 		</Cursor>
-		<Folding>
-			<Collapse line="14" />
-		</Folding>
 	</File>
 	<File name="dev/lx/cvars-usage.bash" open="1" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
@@ -167,6 +56,370 @@
 			<Collapse line="11" />
 			<Collapse line="40" />
 		</Folding>
+	</File>
+	<File name="src/compiler_options.xrc" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="42994" topLine="970" />
+		</Cursor>
+	</File>
+	<File name="src/compileroptionsdlg.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="100925" topLine="344" />
+		</Cursor>
+		<Folding>
+			<Collapse line="0" />
+			<Collapse line="205" />
+			<Collapse line="216" />
+			<Collapse line="222" />
+			<Collapse line="227" />
+			<Collapse line="245" />
+			<Collapse line="304" />
+			<Collapse line="307" />
+			<Collapse line="310" />
+			<Collapse line="325" />
+			<Collapse line="334" />
+			<Collapse line="368" />
+			<Collapse line="388" />
+			<Collapse line="397" />
+			<Collapse line="404" />
+			<Collapse line="414" />
+			<Collapse line="438" />
+			<Collapse line="451" />
+			<Collapse line="456" />
+			<Collapse line="460" />
+			<Collapse line="480" />
+			<Collapse line="491" />
+			<Collapse line="503" />
+			<Collapse line="507" />
+			<Collapse line="514" />
+			<Collapse line="518" />
+			<Collapse line="526" />
+			<Collapse line="542" />
+			<Collapse line="550" />
+			<Collapse line="555" />
+			<Collapse line="574" />
+			<Collapse line="586" />
+			<Collapse line="609" />
+			<Collapse line="647" />
+			<Collapse line="658" />
+			<Collapse line="670" />
+			<Collapse line="679" />
+			<Collapse line="685" />
+			<Collapse line="692" />
+			<Collapse line="711" />
+			<Collapse line="719" />
+			<Collapse line="722" />
+			<Collapse line="732" />
+			<Collapse line="739" />
+			<Collapse line="752" />
+			<Collapse line="765" />
+			<Collapse line="768" />
+			<Collapse line="780" />
+			<Collapse line="785" />
+			<Collapse line="791" />
+			<Collapse line="802" />
+			<Collapse line="807" />
+			<Collapse line="824" />
+			<Collapse line="828" />
+			<Collapse line="830" />
+			<Collapse line="838" />
+			<Collapse line="839" />
+			<Collapse line="848" />
+			<Collapse line="855" />
+			<Collapse line="858" />
+			<Collapse line="867" />
+			<Collapse line="877" />
+			<Collapse line="880" />
+			<Collapse line="890" />
+			<Collapse line="899" />
+			<Collapse line="903" />
+			<Collapse line="923" />
+			<Collapse line="925" />
+			<Collapse line="948" />
+			<Collapse line="990" />
+			<Collapse line="998" />
+			<Collapse line="1006" />
+			<Collapse line="1008" />
+			<Collapse line="1010" />
+			<Collapse line="1015" />
+			<Collapse line="1025" />
+			<Collapse line="1028" />
+			<Collapse line="1033" />
+			<Collapse line="1039" />
+			<Collapse line="1049" />
+			<Collapse line="1059" />
+			<Collapse line="1076" />
+			<Collapse line="1089" />
+			<Collapse line="1093" />
+			<Collapse line="1104" />
+			<Collapse line="1112" />
+			<Collapse line="1118" />
+			<Collapse line="1124" />
+			<Collapse line="1146" />
+			<Collapse line="1156" />
+			<Collapse line="1187" />
+			<Collapse line="1202" />
+			<Collapse line="1212" />
+			<Collapse line="1221" />
+			<Collapse line="1236" />
+			<Collapse line="1249" />
+			<Collapse line="1254" />
+			<Collapse line="1262" />
+			<Collapse line="1405" />
+			<Collapse line="1423" />
+			<Collapse line="1434" />
+			<Collapse line="1454" />
+			<Collapse line="1468" />
+			<Collapse line="1495" />
+			<Collapse line="1501" />
+			<Collapse line="1521" />
+			<Collapse line="1526" />
+			<Collapse line="1530" />
+			<Collapse line="1532" />
+			<Collapse line="1542" />
+			<Collapse line="1544" />
+			<Collapse line="1558" />
+			<Collapse line="1579" />
+			<Collapse line="1585" />
+			<Collapse line="1590" />
+			<Collapse line="1592" />
+			<Collapse line="1597" />
+			<Collapse line="1609" />
+			<Collapse line="1625" />
+			<Collapse line="1638" />
+			<Collapse line="1647" />
+			<Collapse line="1653" />
+			<Collapse line="1665" />
+			<Collapse line="1671" />
+			<Collapse line="1686" />
+			<Collapse line="1695" />
+			<Collapse line="1705" />
+			<Collapse line="1712" />
+			<Collapse line="1719" />
+			<Collapse line="1735" />
+			<Collapse line="1738" />
+			<Collapse line="1745" />
+			<Collapse line="1752" />
+			<Collapse line="1763" />
+			<Collapse line="1769" />
+			<Collapse line="1771" />
+			<Collapse line="1781" />
+			<Collapse line="1793" />
+			<Collapse line="1795" />
+			<Collapse line="1803" />
+			<Collapse line="1809" />
+			<Collapse line="1827" />
+			<Collapse line="1832" />
+			<Collapse line="1845" />
+			<Collapse line="1852" />
+			<Collapse line="1857" />
+			<Collapse line="1870" />
+			<Collapse line="1872" />
+			<Collapse line="1875" />
+			<Collapse line="1880" />
+			<Collapse line="1894" />
+			<Collapse line="1897" />
+			<Collapse line="1899" />
+			<Collapse line="1909" />
+			<Collapse line="1919" />
+			<Collapse line="1921" />
+			<Collapse line="1924" />
+			<Collapse line="1929" />
+			<Collapse line="1944" />
+			<Collapse line="1952" />
+			<Collapse line="1957" />
+			<Collapse line="1965" />
+			<Collapse line="1972" />
+			<Collapse line="1985" />
+			<Collapse line="1993" />
+			<Collapse line="2002" />
+			<Collapse line="2011" />
+			<Collapse line="2019" />
+			<Collapse line="2026" />
+			<Collapse line="2038" />
+			<Collapse line="2052" />
+			<Collapse line="2060" />
+			<Collapse line="2066" />
+			<Collapse line="2068" />
+			<Collapse line="2086" />
+			<Collapse line="2088" />
+			<Collapse line="2099" />
+			<Collapse line="2105" />
+			<Collapse line="2115" />
+			<Collapse line="2130" />
+			<Collapse line="2139" />
+			<Collapse line="2151" />
+			<Collapse line="2193" />
+			<Collapse line="2195" />
+			<Collapse line="2202" />
+			<Collapse line="2211" />
+			<Collapse line="2219" />
+			<Collapse line="2224" />
+			<Collapse line="2232" />
+			<Collapse line="2247" />
+			<Collapse line="2249" />
+			<Collapse line="2256" />
+			<Collapse line="2276" />
+			<Collapse line="2280" />
+			<Collapse line="2284" />
+			<Collapse line="2291" />
+			<Collapse line="2297" />
+			<Collapse line="2308" />
+			<Collapse line="2315" />
+			<Collapse line="2319" />
+			<Collapse line="2329" />
+			<Collapse line="2333" />
+			<Collapse line="2347" />
+			<Collapse line="2355" />
+			<Collapse line="2358" />
+			<Collapse line="2362" />
+			<Collapse line="2377" />
+			<Collapse line="2391" />
+			<Collapse line="2400" />
+			<Collapse line="2408" />
+			<Collapse line="2413" />
+			<Collapse line="2425" />
+			<Collapse line="2431" />
+			<Collapse line="2438" />
+			<Collapse line="2446" />
+			<Collapse line="2449" />
+			<Collapse line="2455" />
+			<Collapse line="2458" />
+			<Collapse line="2469" />
+			<Collapse line="2474" />
+			<Collapse line="2481" />
+			<Collapse line="2491" />
+			<Collapse line="2502" />
+			<Collapse line="2510" />
+			<Collapse line="2516" />
+			<Collapse line="2524" />
+			<Collapse line="2529" />
+			<Collapse line="2532" />
+			<Collapse line="2539" />
+			<Collapse line="2543" />
+			<Collapse line="2552" />
+			<Collapse line="2566" />
+			<Collapse line="2573" />
+			<Collapse line="2577" />
+			<Collapse line="2585" />
+			<Collapse line="2594" />
+			<Collapse line="2600" />
+			<Collapse line="2607" />
+			<Collapse line="2614" />
+			<Collapse line="2621" />
+			<Collapse line="2628" />
+			<Collapse line="2635" />
+			<Collapse line="2648" />
+			<Collapse line="2651" />
+			<Collapse line="2664" />
+			<Collapse line="2677" />
+			<Collapse line="2682" />
+			<Collapse line="2695" />
+			<Collapse line="2704" />
+			<Collapse line="2707" />
+			<Collapse line="2720" />
+			<Collapse line="2729" />
+			<Collapse line="2734" />
+			<Collapse line="2747" />
+			<Collapse line="2752" />
+			<Collapse line="2759" />
+			<Collapse line="2764" />
+			<Collapse line="2804" />
+			<Collapse line="2813" />
+			<Collapse line="2821" />
+			<Collapse line="2829" />
+			<Collapse line="2841" />
+			<Collapse line="2845" />
+			<Collapse line="2853" />
+			<Collapse line="2860" />
+			<Collapse line="2865" />
+			<Collapse line="2875" />
+			<Collapse line="2884" />
+			<Collapse line="2918" />
+			<Collapse line="2941" />
+			<Collapse line="2948" />
+			<Collapse line="2970" />
+			<Collapse line="2976" />
+			<Collapse line="2980" />
+			<Collapse line="2995" />
+			<Collapse line="3003" />
+			<Collapse line="3007" />
+			<Collapse line="3023" />
+			<Collapse line="3026" />
+			<Collapse line="3048" />
+			<Collapse line="3068" />
+			<Collapse line="3077" />
+			<Collapse line="3082" />
+			<Collapse line="3096" />
+			<Collapse line="3113" />
+			<Collapse line="3119" />
+			<Collapse line="3131" />
+			<Collapse line="3138" />
+			<Collapse line="3144" />
+			<Collapse line="3155" />
+			<Collapse line="3162" />
+			<Collapse line="3165" />
+			<Collapse line="3172" />
+			<Collapse line="3177" />
+			<Collapse line="3182" />
+			<Collapse line="3185" />
+			<Collapse line="3189" />
+			<Collapse line="3191" />
+			<Collapse line="3207" />
+			<Collapse line="3212" />
+			<Collapse line="3223" />
+			<Collapse line="3226" />
+			<Collapse line="3229" />
+			<Collapse line="3237" />
+			<Collapse line="3251" />
+			<Collapse line="3275" />
+			<Collapse line="3280" />
+			<Collapse line="3284" />
+		</Folding>
+	</File>
+	<File name="src/compileoptionsbase.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="8166" topLine="110" />
+		</Cursor>
+		<Folding>
+			<Collapse line="14" />
+		</Folding>
+	</File>
+	<File name="dev/lx/cvars-usage.awk" open="1" top="0" tabpos="16" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="257" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="build/lx/build.dev.bash" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="546" topLine="0" />
+		</Cursor>
+		<Folding>
+			<Collapse line="4" />
+		</Folding>
+	</File>
+	<File name="build/lx/build.pub-svn.bash" open="1" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="525" topLine="0" />
+		</Cursor>
+		<Folding>
+			<Collapse line="1" />
+		</Folding>
+	</File>
+	<File name="src/compileoptionsbase.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="13964" topLine="509" />
+		</Cursor>
+	</File>
+	<File name="build/lx/build.pub-obf.bash" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="525" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="build/lx/erg.cb-cvars--apply-patches.bash" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2920" topLine="0" />
+		</Cursor>
 	</File>
 	<File name="src/macrosmanager.cpp" open="1" top="0" tabpos="19" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
@@ -180,71 +433,24 @@
 			<Collapse line="356" />
 		</Folding>
 	</File>
-	<File name="build/lx/build.config.bash" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="11" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/compiler_options.xrc" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="45447" topLine="997" />
-		</Cursor>
-	</File>
-	<File name="build/lx/build.dev.bash" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="546" topLine="0" />
-		</Cursor>
-		<Folding>
-			<Collapse line="4" />
-		</Folding>
-	</File>
-	<File name="src/compiler.cpp" open="1" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="24078" topLine="530" />
-		</Cursor>
-		<Folding>
-			<Collapse line="547" />
-			<Collapse line="607" />
-			<Collapse line="609" />
-		</Folding>
-	</File>
-	<File name="src/projectloader.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="43828" topLine="1181" />
-		</Cursor>
-		<Folding>
-			<Collapse line="1250" />
-			<Collapse line="1260" />
-			<Collapse line="1265" />
-			<Collapse line="1267" />
-			<Collapse line="1276" />
-			<Collapse line="1280" />
-			<Collapse line="1281" />
-		</Folding>
-	</File>
-	<File name="notes/notes.h" open="0" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2918" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="dev/lx/cvars-usage.awk" open="1" top="0" tabpos="16" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="257" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="build/lx/build.bash" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="5870" topLine="97" />
 		</Cursor>
 	</File>
-	<File name="build/lx/build.pub-obf.bash" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="notes/changelog.h" open="1" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="525" topLine="0" />
+			<Cursor1 position="2246" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="build/lx/erg.cb-cvars--apply-patches.bash" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="notes/bugs.h" open="1" top="0" tabpos="21" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2920" topLine="0" />
+			<Cursor1 position="528" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="build/lx/build.config.bash" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="11" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

@@ -149,6 +149,9 @@ class DLLIMPORT CompileOptionsBase
         virtual bool UnsetInactiveVar(const wxString& _i_key);                                      //!< del an inactive CustomVar
         virtual void UnsetAllInactiveVars();                                                        //!< del all inactive CustomVars
         virtual const CustomVarHash& GetAllInactiveVars() const;                                    //!< get all inactive CustomVars
+
+                bool GetVarComment(wxString const & _i_key, int _i_flags, wxString       & _o_comment);
+                bool SetVarComment(wxString const & _i_key, int _i_flags, wxString const & _i_comment);
         //  ........................................................................................    ERG-
     protected:
         int m_Platform;
@@ -170,7 +173,7 @@ class DLLIMPORT CompileOptionsBase
         CustomVarHash   m_InactiveVars;                                                             //!< map for inactive CustomVars
         //  ........................................................................................    ERG+
     private:
-        bool PSetVar(wxString const & _i_key, wxString const & _i_val, int _i_flags, wxString const & _i_comment, bool _i_only_if_exists); //!< really set var
+        bool PSetVar(wxString const & _i_key, wxString const & _i_val, int _i_flags, wxString const & _i_comment, bool _i_only_if_exists);  //!< really set var
 };
 
 #endif // COMPILEOPTIONSBASE_H
