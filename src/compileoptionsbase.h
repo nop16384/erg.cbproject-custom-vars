@@ -58,8 +58,8 @@ class DLLIMPORT CompileOptionsBase
     public:
         enum
         {
-            eVarInactive    =   0x0000  ,
-            eVarActive      =   0x0001
+            eVarActive      =   0x0001  ,
+            eVarInactive    =   0x0002
         };
 
     public:
@@ -145,13 +145,24 @@ class DLLIMPORT CompileOptionsBase
         virtual const wxString& GetVar(const wxString& key) const;
         virtual const CustomVarHash& GetAllVars() const;
         //  ........................................................................................    ERG+
-        virtual bool SetInactiveVar(const wxString& _i_key, const wxString& _i_val);                //!< add an inactive CustomVar
-        virtual bool UnsetInactiveVar(const wxString& _i_key);                                      //!< del an inactive CustomVar
-        virtual void UnsetAllInactiveVars();                                                        //!< del all inactive CustomVars
-        virtual const CustomVarHash& GetAllInactiveVars() const;                                    //!< get all inactive CustomVars
+        // new var API :
+    public:
+        virtual bool VarSet       (wxString const & _i_key, wxString const & _i_val, wxString const & _i_comment, int _i_flags, bool _i_only_if_exists = false);
+        virtual bool VarSetValue  (wxString const & _i_key, wxString const & _i_val);
+        virtual bool VarSetComment(wxString const & _i_key, wxString const & _i_com);
+        virtual bool VarSetFlags  (wxString const & _i_key, int   _i_flags);
 
-                bool GetVarComment(wxString const & _i_key, int _i_flags, wxString       & _o_comment);
-                bool SetVarComment(wxString const & _i_key, int _i_flags, wxString const & _i_comment);
+    private:
+                bool VarGetIterator(wxString const & _i_key, CustomVarHash::iterator & _o_it);
+    public:
+        virtual bool VarGet       (wxString const & _i_key, CustomVar & _o_cv) const;
+        virtual bool VarGetValue  (wxString const & _i_key, wxString       & _o_val) const;
+        virtual bool VarGetComment(wxString const & _i_key, wxString       & _o_com) const;
+        virtual bool VarGetFlags  (wxString const & _i_key, int & _o_flags) const;
+        virtual CustomVarHash const & VarGetAll(int _i_activity_flags = eVarActive) const;
+
+        virtual bool VarUnset(wxString const & _i_key);
+        virtual void VarUnsetAll(int _i_activity_flags = (eVarActive & eVarInactive));
         //  ........................................................................................    ERG-
     protected:
         int m_Platform;

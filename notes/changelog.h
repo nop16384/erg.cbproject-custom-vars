@@ -47,3 +47,6 @@ commit f504221aeab80d98747667e6aa71e3935549403d ( master <- typedef-CustomVar )
     - corrected bugs (002) and (003)
     - set m_bDirty when a comment has changed
     - added file "bugs.h"
+2019.11.26
+    [master]
+    - corrected bug (004L)

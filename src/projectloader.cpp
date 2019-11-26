@@ -920,15 +920,9 @@ void ProjectLoader::DoEnvironment(TiXmlElement* parentNode, CompileOptionsBase* 
             if (!name.IsEmpty())
             {
                 if ( active )
-                {
-                    base->SetVar(name, UnixFilename(value));
-                    base->SetVarComment(name, CompileOptionsBase::eVarActive, comment);
-                }
+                    base->VarSet(name, UnixFilename(value), comment, CompileOptionsBase::eVarActive, false);
                 else
-                {
-                    base->SetInactiveVar(name, UnixFilename(value));
-                    base->SetVarComment(name, CompileOptionsBase::eVarInactive, comment);
-                }
+                    base->VarSet(name, UnixFilename(value), comment, CompileOptionsBase::eVarInactive, false);
             }
             //  ....................................................................................    ERG+
 
@@ -1227,8 +1221,8 @@ static void SaveEnvironment(TiXmlElement* parent, CompileOptionsBase* base)
     //  ERG const StringHash& v = base->GetAllVars();
     //  ERG if (v.empty())
     //  ERG   return;
-    CustomVarHash   const   &   va  =   base->GetAllVars();
-    CustomVarHash   const   &   vi  =   base->GetAllInactiveVars();
+    CustomVarHash   const   &   va  =   base->VarGetAll(CompileOptionsBase::eVarActive);
+    CustomVarHash   const   &   vi  =   base->VarGetAll(CompileOptionsBase::eVarInactive);
     //  ............................................................................................    ERG-
     // explicitly sort the keys
     typedef std::map<wxString, wxString> SortedMap;

@@ -60,3 +60,8 @@ com = XRCCTRL(*this, "VarComment", wxTextCtrl)->GetValue();                 -> o
 
 Why set m_VarsPrevSelModRow = wxNOT_FOUND in OnTreeSelectionChange() and not in DoFillVars() ?
   because DoFillCompilerDependentSettings(), which calls DoFillVars(), is not called systematically.
+
+
+SetVar and SetVar
+scriptbindings.cpp:901:59: error: no matching function for call to ‘SqPlus::SQClassDef<CompileOptionsBase>::func(<unresolved overloaded function type>, const char [7])’
+                 func(&CompileOptionsBase::SetVar, "SetVar").

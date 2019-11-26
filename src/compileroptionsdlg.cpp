@@ -592,10 +592,13 @@ void CompilerOptionsDlg::DoFillVars()
     if ( ! base )
         return;
 
-    va  =   &base->GetAllVars();
-    vi  =   &base->GetAllInactiveVars();
+    va  =   &( base->VarGetAll(CompileOptionsBase::eVarActive) );
+    vi  =   &( base->VarGetAll(CompileOptionsBase::eVarInactive) );
     if ( ( ! va ) || ( ! vi ) )
         return;
+
+    printf("HMapA[%p][%lu]\n", va, va->size());
+    printf("HMapI[%p][%lu]\n", vi, vi->size());
 
     m_VarsWxModel->DeleteAllItems();
 
@@ -1225,8 +1228,8 @@ void CompilerOptionsDlg::DoSaveVars()
     if ( ! base )
         return;
 
-    base->UnsetAllVars();
-    base->UnsetAllInactiveVars();
+    ///base->UnsetAllVars();
+    base->VarUnsetAll();
 
     //  this save the comment of current selected row if no row selection change has happened
     int mrow = m_VarsWxCtrl->GetSelectedRow();
@@ -1246,16 +1249,7 @@ void CompilerOptionsDlg::DoSaveVars()
         wxString    val     = vv.GetString().Trim(true).Trim(false);
         wxString    com     = vc.GetString().Trim(true).Trim(false);
 
-        if ( active )
-        {
-            base->SetVar(key, val);
-            base->SetVarComment(key, CompileOptionsBase::eVarActive, com);
-        }
-        else
-        {
-            base->SetInactiveVar(key, val);
-            base->SetVarComment(key, CompileOptionsBase::eVarInactive, com);
-        }
+        base->VarSet(key, val, com, active ? CompileOptionsBase::eVarActive : CompileOptionsBase::eVarInactive, false);
     }
 } // DoSaveVars
 

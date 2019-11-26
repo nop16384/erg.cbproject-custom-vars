@@ -37,6 +37,8 @@
  (011)  2019.11.25  Set m_bDirty when comment has changed on at leat one var
 
  (012)  2019.11.25  BUG (003)
+
+ (013)  2019.11.26  BUG (004L)
 //  ############################################################################
 (001)   2019.11.17  Done properly. Just modify the xrc file.
 
@@ -68,3 +70,6 @@
 
  (012)  2019.11.25  OnVarListSelChanged() is called with wxNOT_FOUND index when target is switched.
     So clear the wxTextCtrl when it happens.
+
+ (013)  2019.11.26  New API in which algorithms check the 2 maps, m_ActiveVars and m_InactiveVars;
+    The old API continue to work only with m_ActiveVars.
