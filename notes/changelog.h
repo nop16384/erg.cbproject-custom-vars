@@ -50,3 +50,6 @@ commit f504221aeab80d98747667e6aa71e3935549403d ( master <- typedef-CustomVar )
 2019.11.26
     [master]
     - corrected bug (004L)
+2019.11.27
+    [master]
+    - projectloader.cpp : replaced test if ( active)... by call to VarSet()

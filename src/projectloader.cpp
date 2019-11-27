@@ -917,15 +917,10 @@ void ProjectLoader::DoEnvironment(TiXmlElement* parentNode, CompileOptionsBase* 
             wxString    value   = cbC2U(child->Attribute("value"));
             wxString    comment = cbC2U(child->Attribute("comment"));
             bool        active  = ( child->Attribute("active") != NULL ) ? true : false;
-            if (!name.IsEmpty())
-            {
-                if ( active )
-                    base->VarSet(name, UnixFilename(value), comment, CompileOptionsBase::eVarActive, false);
-                else
-                    base->VarSet(name, UnixFilename(value), comment, CompileOptionsBase::eVarInactive, false);
-            }
-            //  ....................................................................................    ERG+
 
+            if (!name.IsEmpty())
+                base->VarSet(name, UnixFilename(value), comment, active ? CompileOptionsBase::eVarActive : CompileOptionsBase::eVarInactive, false);
+            //  ....................................................................................    ERG-
             child = child->NextSiblingElement("Variable");
         }
         node = node->NextSiblingElement("Environment");
