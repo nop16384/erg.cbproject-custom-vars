@@ -215,9 +215,13 @@ void ReadMacros(MacrosMap &macros, T *object)
         //  ERG const StringHash& v = object->GetAllVars();
         //  ERG for (StringHash::const_iterator it = v.begin(); it != v.end(); ++it)
         //  ERG     macros[it->first.Upper()] = it->second;
-        const CustomVarHash& v = object->GetAllVars();
-        for (CustomVarHash::const_iterator it = v.begin(); it != v.end(); ++it)
-            macros[it->first.Upper()] = it->second.value;
+
+        //  ERG const CustomVarHash& v = object->GetAllVars();
+        //  ERG for (CustomVarHash::const_iterator it = v.begin(); it != v.end(); ++it)
+        //  ERG     macros[it->first.Upper()] = it->second.value;
+
+        for ( CustomVarHash::const_iterator * it = object->VarEnumGetFirst() ; it != nullptr ; it = object->VarEnumGetNext() )
+            macros[ (*it)->first.Upper()] = (*it)->second.value;
         //  ........................................................................................    ERG-
     }
 }
@@ -239,9 +243,13 @@ void MacrosManager::RecalcVars(const cbProject* project, EditorBase* editor, con
         //  ERG const StringHash& v = m_LastTarget->GetAllVars();
         //  ERG for (StringHash::const_iterator it = v.begin(); it != v.end(); ++it)
         //  ERG     m_Macros.erase(it->first.Upper());
-        const CustomVarHash& v = m_LastTarget->GetAllVars();
-        for (CustomVarHash::const_iterator it = v.begin(); it != v.end(); ++it)
-            m_Macros.erase(it->first.Upper());
+
+        //  ERG const CustomVarHash& v = m_LastTarget->GetAllVars();
+        //  ERG for (CustomVarHash::const_iterator it = v.begin(); it != v.end(); ++it)
+        //  ERG     m_Macros.erase(it->first.Upper());
+
+        for ( CustomVarHash::const_iterator * it = m_LastTarget->VarEnumGetFirst() ; it != nullptr ; it = m_LastTarget->VarEnumGetNext() )
+            m_Macros.erase((*it)->first.Upper());
         //  ........................................................................................    ERG-
     }
 

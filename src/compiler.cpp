@@ -580,9 +580,12 @@ void Compiler::SaveSettings(const wxString& baseKey)
     //  ERG const StringHash& v = GetAllVars();
     //  ERG for (StringHash::const_iterator it = v.begin(); it != v.end(); ++it)
     //  ERG     cfg->Write(configpath + it->first, it->second);
-    const CustomVarHash& v = GetAllVars();
-    for (CustomVarHash::const_iterator it = v.begin(); it != v.end(); ++it)
-        cfg->Write(configpath + it->first, it->second.value);
+
+    //  ERG const CustomVarHash& v = GetAllVars();
+    //  ERG for (CustomVarHash::const_iterator it = v.begin(); it != v.end(); ++it)
+    //  ERG     cfg->Write(configpath + it->first, it->second.value);
+    for ( CustomVarHash::const_iterator * it = VarEnumGetFirst() ; it != nullptr ; it = VarEnumGetNext() )
+        cfg->Write(configpath + (*it)->first, (*it)->second.value);
     //  ............................................................................................    ERG-
 }
 

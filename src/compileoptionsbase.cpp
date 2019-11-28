@@ -561,10 +561,10 @@ const wxString& CompileOptionsBase::GetVar(const wxString& key) const
     return emptystring;
 }
 
-const CustomVarHash& CompileOptionsBase::GetAllVars() const
-{
-    return m_ActiveVars;
-}
+//  ERG const CustomVarHash& CompileOptionsBase::GetAllVars() const
+//  ERG {
+//  ERG     return m_ActiveVars;
+//  ERG }
 //  ................................................................................................
 bool CompileOptionsBase::VarSet(wxString const & _i_key, wxString const & _i_val, wxString const & _i_comment, int _i_flags, bool _i_only_if_exists)
 {
@@ -760,16 +760,17 @@ bool CompileOptionsBase::VarGetFlags(wxString const & _i_key, int & _o_flags) co
     return false;
 }
 
-CustomVarHash const & CompileOptionsBase::VarGetAll(int _i_activity_flags) const
-{
-    if ( _i_activity_flags & CompileOptionsBase::eVarActive )
-        return m_ActiveVars;
+//  ERG CustomVarHash const & CompileOptionsBase::VarGetAll(int _i_activity_flags) const
+//  ERG {
+//  ERG if ( _i_activity_flags & CompileOptionsBase::eVarActive )
+//  ERG         return m_ActiveVars;
 
-    if ( _i_activity_flags & CompileOptionsBase::eVarInactive )
-        return m_InactiveVars;
+//  ERG     if ( _i_activity_flags & CompileOptionsBase::eVarInactive )
+//  ERG         return m_InactiveVars;
 
-    return m_ActiveVars;                                                                            // by default
-}
+//  ERG     return m_ActiveVars;                                                                            // by default
+//  ERG
+//  ERG }
 
 bool CompileOptionsBase::VarUnset(wxString const & _i_key)
 {
@@ -800,6 +801,55 @@ void CompileOptionsBase::VarUnsetAll(int _i_activity_flags)
 
     if ( _i_activity_flags & CompileOptionsBase::eVarInactive )
         m_InactiveVars.clear();
+}
+
+//
+//  custom GetAllVars
+//
+
+//  this variables because in CB code, GetAllVars() is assumed const. So we cant define these vars
+//  as class members.
+static  int                                 m_VarEnumFlags;
+static  CustomVarHash const             *   m_VarEnumHash;
+static  CustomVarHash::const_iterator       m_VarEnumIterator;
+
+void CompileOptionsBase::VarEnumInit(CustomVarHash const * _i_hash) const
+{
+    m_VarEnumHash       =   _i_hash;
+    m_VarEnumIterator   =   m_VarEnumHash->begin();
+}
+
+CustomVarHash::const_iterator* CompileOptionsBase::VarEnumFind() const
+{
+    while ( m_VarEnumIterator != m_VarEnumHash->end() )
+    {
+        if ( m_VarEnumIterator->second.flags & m_VarEnumFlags )
+            return &m_VarEnumIterator;
+
+        m_VarEnumIterator++;
+    }
+
+    if ( m_VarEnumHash == &m_InactiveVars )
+        return nullptr;
+
+    VarEnumInit(&m_InactiveVars);
+
+    return VarEnumFind();
+}
+
+CustomVarHash::const_iterator* CompileOptionsBase::VarEnumGetFirst(int _i_flags) const
+{
+    m_VarEnumFlags      =   _i_flags;
+
+    VarEnumInit(&m_ActiveVars);
+
+    return VarEnumFind();
+ }
+
+CustomVarHash::const_iterator* CompileOptionsBase::VarEnumGetNext() const
+{
+    m_VarEnumIterator++;
+    return VarEnumFind();
 }
 //  ................................................................................................    ERG-
 void CompileOptionsBase::SetLinkerExecutable(LinkerExecutableOption option)

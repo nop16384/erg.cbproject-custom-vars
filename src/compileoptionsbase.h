@@ -59,7 +59,9 @@ class DLLIMPORT CompileOptionsBase
         enum
         {
             eVarActive      =   0x0001  ,
-            eVarInactive    =   0x0002
+            eVarInactive    =   0x0002  ,
+
+            eVarAll         =   0xffff
         };
 
     public:
@@ -143,9 +145,9 @@ class DLLIMPORT CompileOptionsBase
         virtual void UnsetAllVars();
         virtual bool HasVar(const wxString& key) const;
         virtual const wxString& GetVar(const wxString& key) const;
-        virtual const CustomVarHash& GetAllVars() const;
+        //  ERG virtual const CustomVarHash& GetAllVars() const;
         //  ........................................................................................    ERG+
-        // new var API :
+        //  new var API :
     public:
         virtual bool VarSet       (wxString const & _i_key, wxString const & _i_val, wxString const & _i_comment, int _i_flags, bool _i_only_if_exists = false);
         virtual bool VarSetValue  (wxString const & _i_key, wxString const & _i_val);
@@ -159,10 +161,18 @@ class DLLIMPORT CompileOptionsBase
         virtual bool VarGetValue  (wxString const & _i_key, wxString       & _o_val) const;
         virtual bool VarGetComment(wxString const & _i_key, wxString       & _o_com) const;
         virtual bool VarGetFlags  (wxString const & _i_key, int & _o_flags) const;
-        virtual CustomVarHash const & VarGetAll(int _i_activity_flags = eVarActive) const;
+        //  ERG virtual CustomVarHash const & VarGetAll(int _i_activity_flags = eVarActive) const;
 
         virtual bool VarUnset(wxString const & _i_key);
         virtual void VarUnsetAll(int _i_activity_flags = (eVarActive & eVarInactive));
+
+        //  Custom GetAllVars
+    private:
+                void                                VarEnumInit(CustomVarHash const * _i_hash) const;
+                CustomVarHash::const_iterator   *   VarEnumFind() const;
+    public:
+                CustomVarHash::const_iterator   *   VarEnumGetFirst(int _i_flags = eVarActive) const;
+                CustomVarHash::const_iterator   *   VarEnumGetNext() const;
         //  ........................................................................................    ERG-
     protected:
         int m_Platform;
@@ -182,9 +192,10 @@ class DLLIMPORT CompileOptionsBase
         //  ........................................................................................    ERG+
         CustomVarHash   m_ActiveVars;                                                               //!< map for active CustomVars
         CustomVarHash   m_InactiveVars;                                                             //!< map for inactive CustomVars
+    private:
         //  ........................................................................................    ERG+
     private:
-        bool PSetVar(wxString const & _i_key, wxString const & _i_val, int _i_flags, wxString const & _i_comment, bool _i_only_if_exists);  //!< really set var
+
 };
 
 #endif // COMPILEOPTIONSBASE_H

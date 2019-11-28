@@ -585,28 +585,27 @@ void CompilerOptionsDlg::WxModelAddVarHelper(bool _i_active, wxString const& _i_
 //  ................................................................................................    ERG-
 void CompilerOptionsDlg::DoFillVars()
 {
-    const CustomVarHash         *   va      =   0;
-    const CustomVarHash         *   vi      =   0;
     const CompileOptionsBase    *   base    =   GetVarsOwner();
     //  ............................................................................................
     if ( ! base )
         return;
-
-    va  =   &( base->VarGetAll(CompileOptionsBase::eVarActive) );
-    vi  =   &( base->VarGetAll(CompileOptionsBase::eVarInactive) );
-    if ( ( ! va ) || ( ! vi ) )
-        return;
-
-    printf("HMapA[%p][%lu]\n", va, va->size());
-    printf("HMapI[%p][%lu]\n", vi, vi->size());
-
+    //  ............................................................................................
+    //  TEST
+    ///for ( CustomVarHash::const_iterator * it = base->VarEnumGetFirst(0xffff) ; it != nullptr ; it = base->VarEnumGetNext() )
+    ///{
+    ///    printf("CVar [%s]\n"    , (*it)->first         .ToStdString().c_str());
+    ///    printf("     [%s]\n"    , (*it)->second.value  .ToStdString().c_str());
+    ///    printf("     [%s]\n"    , (*it)->second.comment.ToStdString().c_str());
+    ///    printf("     [%08x]\n"  , (*it)->second.flags);
+    ///}
+    //  ............................................................................................
     m_VarsWxModel->DeleteAllItems();
 
-    for (CustomVarHash::const_iterator it = va->begin(); it != va->end(); ++it)
-        WxModelAddVarHelper(true, it->first, it->second.value, it->second.comment);
-
-    for (CustomVarHash::const_iterator it = vi->begin(); it != vi->end(); ++it)
-        WxModelAddVarHelper(false, it->first, it->second.value, it->second.comment);
+    for ( CustomVarHash::const_iterator * it = base->VarEnumGetFirst(CompileOptionsBase::eVarAll) ; it != nullptr ; it = base->VarEnumGetNext() )
+    {
+        CustomVar cv = (*it)->second;
+        WxModelAddVarHelper(cv.flags & CompileOptionsBase::eVarActive ? true : false, (*it)->first, cv.value, cv.comment);
+    }
 } // DoFillVars
 
 void CompilerOptionsDlg::DoFillOthers()
