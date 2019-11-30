@@ -1226,7 +1226,7 @@ static void SaveEnvironment(TiXmlElement* parent, CompileOptionsBase* base)
 
     TiXmlElement* node = AddElement(parent, "Environment");
 
-    for ( CustomVarHash::const_iterator * it = base->VarEnumGetFirst() ; it != nullptr ; it = base->VarEnumGetNext() )
+    for ( CustomVarHash::const_iterator * it = base->VarEnumGetFirst(CompileOptionsBase::eVarAll) ; it != nullptr ; it = base->VarEnumGetNext() )
     {
         CustomVar cv = (*it)->second;
 

@@ -16,6 +16,8 @@
     #include "macrosmanager.h"
 #endif
 
+#include <list>
+
 namespace { static const bool s_case_sensitive = platform::windows ? false : true; }
 
 CompileOptionsBase::CompileOptionsBase()
@@ -527,121 +529,64 @@ bool CompileOptionsBase::SetVar(const wxString& key, const wxString& value, bool
 
 bool CompileOptionsBase::UnsetVar(const wxString& key)
 {
-    CustomVarHash::iterator it = m_ActiveVars.find(key);
-    if (it != m_ActiveVars.end())
-    {
-        m_ActiveVars.erase(it);
-        SetModified(true);
-        return true;
-    }
-    return false;
+    CustomVar cv;
+    //  ............................................................................................
+    if ( ! VarGet(key, cv) )
+        return false;
+
+    if ( ! ( cv.flags & CompileOptionsBase::eVarActive ) )
+        return false;
+
+    return VarUnset(key);
 }
 
 void CompileOptionsBase::UnsetAllVars()
 {
-    m_ActiveVars.clear();
+    VarUnsetAll(CompileOptionsBase::eVarActive);
     SetModified(true);                                                                              // _ERG_CORR_ added, was missing
 }
 
 bool CompileOptionsBase::HasVar(const wxString& key) const
 {
-    CustomVarHash::const_iterator it = m_ActiveVars.find(key);
-    if (it != m_ActiveVars.end())
-        return true;
-    return false;
+    CustomVar cv;
+    //  ............................................................................................
+    if ( ! VarGet(key, cv) )
+        return false;
+
+    if ( ! ( cv.flags & CompileOptionsBase::eVarActive ) )
+        return false;
+
+    return true;
 }
 
 const wxString& CompileOptionsBase::GetVar(const wxString& key) const
 {
-    CustomVarHash::const_iterator it = m_ActiveVars.find(key);
-    if (it != m_ActiveVars.end())
-    return it->second.value;
+    CustomVarHash::const_iterator it = m_Vars.find(key);
+    if (it != m_Vars.end())
+        return it->second.value;
 
     static wxString emptystring = wxEmptyString;
     return emptystring;
 }
-
-//  ERG const CustomVarHash& CompileOptionsBase::GetAllVars() const
-//  ERG {
-//  ERG     return m_ActiveVars;
-//  ERG }
 //  ................................................................................................
 bool CompileOptionsBase::VarSet(wxString const & _i_key, wxString const & _i_val, wxString const & _i_comment, int _i_flags, bool _i_only_if_exists)
 {
-    CustomVarHash               *   h1;                                                             // destination hash
-    CustomVarHash               *   h2;                                                             // the other hash
-    CustomVarHash::iterator         it1;
-    CustomVarHash::iterator         it2;
+    CustomVarHash::iterator         it;
     CustomVar                       cv  = { _i_val, _i_comment, _i_flags };
     //  ............................................................................................
-    if ( _i_flags & CompileOptionsBase::eVarActive )
+    if ( ! VarGetIterator(_i_key, it) )
     {
-        h1  =   &m_ActiveVars;
-        h2  =   &m_InactiveVars;
-    }
-    else
-    {
-        h1  =   &m_InactiveVars;
-        h2  =   &m_ActiveVars;
-    }
-
-    it1 = h1->find(_i_key);
-    it2 = h2->find(_i_key);
-    //  ............................................................................................
-    if ( _i_only_if_exists )
-    {
-        if ( it1 == h1->end() )
-        {
-            if ( it2 == h2->end() )
-            {
-                return false;
-            }
-            else
-            {
-                h2->erase(it2);
-                (*h1)[_i_key] = cv;
-                SetModified(true);
-                return true;
-            }
-        }
-        else
-        {
-            if ( it2 != h2->end() )                                                                 // PB !
-            {
-                return false;
-            }
-            it1->second = cv;
-            SetModified(true);
-            return true;
-        }
-    }
-    //  ............................................................................................
-    if ( it1 == h1->end() )
-    {
-        if ( it2 == h2->end() )
-        {
-            (*h1)[_i_key] = cv;
-            SetModified(true);
-            return true;
-        }
-        else
-        {
-            h2->erase(it2);
-            (*h1)[_i_key] = cv;
-            SetModified(true);
-            return true;
-        }
-    }
-    else
-    {
-        if ( it2 != h2->end() )                                                                     // PB !
-        {
+        if ( _i_only_if_exists )
             return false;
-        }
-        it1->second = cv;
+
+        m_Vars[_i_key] = cv;
         SetModified(true);
         return true;
     }
+
+    it->second = cv;
+    SetModified(true);
+    return true;
 }
 
 bool CompileOptionsBase::VarSetValue(wxString const & _i_key, wxString const & _i_val)
@@ -651,6 +596,7 @@ bool CompileOptionsBase::VarSetValue(wxString const & _i_key, wxString const & _
     if ( VarGetIterator(_i_key, it) )
     {
         it->second.value = _i_val;
+        SetModified(true);
         return true;
     }
 
@@ -664,39 +610,45 @@ bool CompileOptionsBase::VarSetComment(wxString const & _i_key, wxString const &
     if ( VarGetIterator(_i_key, it) )
     {
         it->second.comment = _i_com;
+        SetModified(true);
         return true;
     }
 
     return false;
 }
 
-bool CompileOptionsBase::VarSetFlags  (wxString const & _i_key, int _i_flags)
+bool CompileOptionsBase::VarSetFlags(wxString const & _i_key, int _i_flags)
 {
-    //  This method can change the stotage ( m_ActiveVars / m_InactiveVars ) following
-    //  eVarActive / eVarInactive flag
+    CustomVarHash::iterator it;
     //  ............................................................................................
-    CustomVar cv;
-    //  ............................................................................................
-    if ( ! VarGet(_i_key, cv) )
-        return false;
+    if ( VarGetIterator(_i_key, it) )
+    {
+        it->second.flags = _i_flags;
+        SetModified(true);
+        return true;
+    }
 
-    return VarSet(_i_key, cv.value, cv.comment, _i_flags, true);
+    return false;
 }
 
 bool CompileOptionsBase::VarGetIterator(wxString const & _i_key, CustomVarHash::iterator & _o_it)
 {
-    CustomVarHash           &   h1  =   m_ActiveVars;
-    CustomVarHash           &   h2  =   m_InactiveVars;
     CustomVarHash::iterator     it;
     //  ............................................................................................
-    it = h1.find(_i_key);
-    if ( it != h1.end() )
+    it = m_Vars.find(_i_key);
+    if ( it != m_Vars.end() )
+    {
         _o_it = it;
         return true;
+    }
 
-    it = h2.find(_i_key);
-    if ( it != h2.end() )
-        _o_it = it;
+    return false;
+}
+
+bool CompileOptionsBase::VarHas(wxString const & _i_key) const
+{
+    CustomVarHash::const_iterator it = m_Vars.find(_i_key);
+    if (it != m_Vars.end())
         return true;
 
     return false;
@@ -704,17 +656,12 @@ bool CompileOptionsBase::VarGetIterator(wxString const & _i_key, CustomVarHash::
 
 bool CompileOptionsBase::VarGet(wxString const & _i_key, CustomVar & _o_cv) const
 {
-    CustomVarHash                   const   &   h1  =   m_ActiveVars;
-    CustomVarHash                   const   &   h2  =   m_InactiveVars;
+    //  Cant use VarGetIterator due to const
+    //  ............................................................................................
     CustomVarHash::const_iterator   it;
     //  ............................................................................................
-    it = h1.find(_i_key);
-    if ( it != h1.end() )
-        _o_cv = it->second;
-        return true;
-
-    it = h2.find(_i_key);
-    if ( it != h2.end() )
+    it = m_Vars.find(_i_key);
+    if ( it != m_Vars.end() )
         _o_cv = it->second;
         return true;
 
@@ -760,68 +707,50 @@ bool CompileOptionsBase::VarGetFlags(wxString const & _i_key, int & _o_flags) co
     return false;
 }
 
-//  ERG CustomVarHash const & CompileOptionsBase::VarGetAll(int _i_activity_flags) const
-//  ERG {
-//  ERG if ( _i_activity_flags & CompileOptionsBase::eVarActive )
-//  ERG         return m_ActiveVars;
-
-//  ERG     if ( _i_activity_flags & CompileOptionsBase::eVarInactive )
-//  ERG         return m_InactiveVars;
-
-//  ERG     return m_ActiveVars;                                                                            // by default
-//  ERG
-//  ERG }
-
 bool CompileOptionsBase::VarUnset(wxString const & _i_key)
 {
-    CustomVarHash           &   h1  =   m_ActiveVars;
-    CustomVarHash           &   h2  =   m_InactiveVars;
     CustomVarHash::iterator     it;
     //  ............................................................................................
-    it = h1.find(_i_key);
-    if ( it != h1.end() )
+    if ( VarGetIterator(_i_key, it) )
     {
-        h1.erase(it);
-        return true;
-    }
-
-    it = h2.find(_i_key);
-    if ( it != h2.end() )
-    {
-        h2.erase(it);
+        m_Vars.erase(it);
+        SetModified(true);
         return true;
     }
 
     return false;
 }
+
 void CompileOptionsBase::VarUnsetAll(int _i_activity_flags)
 {
-    if ( _i_activity_flags & CompileOptionsBase::eVarActive )
-        m_ActiveVars.clear();
+    std::list< wxString >       lst;
+    CustomVarHash::iterator     it;
+    //  ............................................................................................
+    for ( it = m_Vars.begin() ; it != m_Vars.end() ; it++ )
+    {
+        if ( it->second.flags & _i_activity_flags )
+        {
+            lst.push_front( it->first );
+        }
+    }
 
-    if ( _i_activity_flags & CompileOptionsBase::eVarInactive )
-        m_InactiveVars.clear();
+    for ( std::list< wxString >::iterator jt = lst.begin() ; jt != lst.end() ; jt++ )
+    {
+        m_Vars.erase( *jt );
+    }
+
+    if ( ! lst.empty() )
+        SetModified(true);
 }
 
-//
-//  custom GetAllVars
-//
-
-//  this variables because in CB code, GetAllVars() is assumed const. So we cant define these vars
-//  as class members.
+//  this variables because in CB code, "gettin all vars()" assumes const objects ( typically
+//  a const CompileOptionsBase object ). So we cant define the these two vars as class members.
 static  int                                 m_VarEnumFlags;
-static  CustomVarHash const             *   m_VarEnumHash;
 static  CustomVarHash::const_iterator       m_VarEnumIterator;
-
-void CompileOptionsBase::VarEnumInit(CustomVarHash const * _i_hash) const
-{
-    m_VarEnumHash       =   _i_hash;
-    m_VarEnumIterator   =   m_VarEnumHash->begin();
-}
 
 CustomVarHash::const_iterator* CompileOptionsBase::VarEnumFind() const
 {
-    while ( m_VarEnumIterator != m_VarEnumHash->end() )
+    while ( m_VarEnumIterator != m_Vars.end() )
     {
         if ( m_VarEnumIterator->second.flags & m_VarEnumFlags )
             return &m_VarEnumIterator;
@@ -829,19 +758,13 @@ CustomVarHash::const_iterator* CompileOptionsBase::VarEnumFind() const
         m_VarEnumIterator++;
     }
 
-    if ( m_VarEnumHash == &m_InactiveVars )
-        return nullptr;
-
-    VarEnumInit(&m_InactiveVars);
-
-    return VarEnumFind();
+    return nullptr;
 }
 
 CustomVarHash::const_iterator* CompileOptionsBase::VarEnumGetFirst(int _i_flags) const
 {
     m_VarEnumFlags      =   _i_flags;
-
-    VarEnumInit(&m_ActiveVars);
+    m_VarEnumIterator   =   m_Vars.begin();
 
     return VarEnumFind();
  }
@@ -849,6 +772,7 @@ CustomVarHash::const_iterator* CompileOptionsBase::VarEnumGetFirst(int _i_flags)
 CustomVarHash::const_iterator* CompileOptionsBase::VarEnumGetNext() const
 {
     m_VarEnumIterator++;
+
     return VarEnumFind();
 }
 //  ................................................................................................    ERG-

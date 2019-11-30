@@ -56,15 +56,6 @@ enum class LinkerExecutableOption : int32_t
 class DLLIMPORT CompileOptionsBase
 {
     public:
-        enum
-        {
-            eVarActive      =   0x0001  ,
-            eVarInactive    =   0x0002  ,
-
-            eVarAll         =   0xffff
-        };
-
-    public:
         CompileOptionsBase();
         virtual ~CompileOptionsBase();
 
@@ -140,39 +131,47 @@ class DLLIMPORT CompileOptionsBase
         virtual bool GetAlwaysRunPostBuildSteps() const;
         virtual void SetAlwaysRunPostBuildSteps(bool always);
 
-        virtual bool SetVar(const wxString& key, const wxString& value, bool onlyIfExists = false);
-        virtual bool UnsetVar(const wxString& key);
-        virtual void UnsetAllVars();
-        virtual bool HasVar(const wxString& key) const;
-        virtual const wxString& GetVar(const wxString& key) const;
-        //  ERG virtual const CustomVarHash& GetAllVars() const;
         //  ........................................................................................    ERG+
+        //  old var API ( assumes the variable is active ) :
+        virtual bool SetVar(const wxString& key, const wxString& value, bool onlyIfExists = false); //!< old API, works only on active variables
+        virtual bool UnsetVar(const wxString& key);                                                 //!< old API, works only on active variables
+        virtual void UnsetAllVars();                                                                //!< old API, works only on active variables
+        virtual bool HasVar(const wxString& key) const;                                             //!< old API, works only on active variables
+        virtual const wxString& GetVar(const wxString& key) const;                                  //!< old API, works only on active variables
+
         //  new var API :
+    public:
+        enum
+        {
+            eVarActive      =   0x0001  ,                                                           //!< select active vars in API calls
+            eVarInactive    =   0x0002  ,                                                           //!< select inactive vars in API calls
+
+            eVarAll         =   0xffff                                                              //!< select all vars in API calls
+        };
+
     public:
         virtual bool VarSet       (wxString const & _i_key, wxString const & _i_val, wxString const & _i_comment, int _i_flags, bool _i_only_if_exists = false);
         virtual bool VarSetValue  (wxString const & _i_key, wxString const & _i_val);
         virtual bool VarSetComment(wxString const & _i_key, wxString const & _i_com);
         virtual bool VarSetFlags  (wxString const & _i_key, int   _i_flags);
-
     private:
                 bool VarGetIterator(wxString const & _i_key, CustomVarHash::iterator & _o_it);
+
     public:
+        virtual bool VarHas       (wxString const & _i_key) const;
         virtual bool VarGet       (wxString const & _i_key, CustomVar & _o_cv) const;
         virtual bool VarGetValue  (wxString const & _i_key, wxString       & _o_val) const;
         virtual bool VarGetComment(wxString const & _i_key, wxString       & _o_com) const;
         virtual bool VarGetFlags  (wxString const & _i_key, int & _o_flags) const;
-        //  ERG virtual CustomVarHash const & VarGetAll(int _i_activity_flags = eVarActive) const;
 
         virtual bool VarUnset(wxString const & _i_key);
         virtual void VarUnsetAll(int _i_activity_flags = (eVarActive & eVarInactive));
 
-        //  Custom GetAllVars
     private:
-                void                                VarEnumInit(CustomVarHash const * _i_hash) const;
-                CustomVarHash::const_iterator   *   VarEnumFind() const;
+                CustomVarHash::const_iterator * VarEnumFind() const;
     public:
-                CustomVarHash::const_iterator   *   VarEnumGetFirst(int _i_flags = eVarActive) const;
-                CustomVarHash::const_iterator   *   VarEnumGetNext() const;
+                CustomVarHash::const_iterator * VarEnumGetFirst(int _i_flags = eVarActive) const;
+                CustomVarHash::const_iterator * VarEnumGetNext() const;
         //  ........................................................................................    ERG-
     protected:
         int m_Platform;
@@ -190,9 +189,7 @@ class DLLIMPORT CompileOptionsBase
         bool m_Modified;
         bool m_AlwaysRunPostCmds;
         //  ........................................................................................    ERG+
-        CustomVarHash   m_ActiveVars;                                                               //!< map for active CustomVars
-        CustomVarHash   m_InactiveVars;                                                             //!< map for inactive CustomVars
-    private:
+        CustomVarHash   m_Vars;                                                                     //!< map for CustomVars
         //  ........................................................................................    ERG+
     private:
 
