@@ -55,6 +55,11 @@ commit f504221aeab80d98747667e6aa71e3935549403d ( master <- typedef-CustomVar )
     - projectloader.cpp : replaced test if ( active)... by call to VarSet()
     - created branch [custom-GetAllVars-two-maps]
     - CompileOptionsBase.h : deleted old PSetVar() method
-2019.11.230
+2019.11.30
     - created branch [custom-GetAllVars-one-map]
     - all seems OK
+----------------------------------------------------------------------------------------------------
+commit efc0b1dabd0e30e6a5e51782a35f9b66622a5a43 ( master <- typedef-CustomVar )
+----------------------------------------------------------------------------------------------------    - [master] <- [custom-GetAllVars-one-map]
+2019.11.30
+    - merge and pub [master] <- [custom-GetAllVars-one-map]
