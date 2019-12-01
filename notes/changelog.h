@@ -63,3 +63,10 @@ commit efc0b1dabd0e30e6a5e51782a35f9b66622a5a43 ( master <- typedef-CustomVar )
 ----------------------------------------------------------------------------------------------------    - [master] <- [custom-GetAllVars-one-map]
 2019.11.30
     - merge and pub [master] <- [custom-GetAllVars-one-map]
+2019.12.01
+    - moved src/SVN11914 to src/ref
+    - tried to check ref files against trunks to patch files, but some svn headers messed me up
+----------------------------------------------------------------------------------------------------
+commit
+----------------------------------------------------------------------------------------------------    - [master] <- [custom-GetAllVars-one-map]
+

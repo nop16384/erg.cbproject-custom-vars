@@ -1,4 +1,22 @@
 #   ------------------------------------------------------------------------------------------------
+#   build_pub__verify_file_changes
+#
+#   verify that the dst file is the same as the reference file
+#
+#   $1  ref-file apath
+#   $2  dst-file apath
+#   ------------------------------------------------------------------------------------------------
+function    build_pub__verify_file_changes
+{
+    R=$( diff "$1" "$2" )
+
+    if [[ $(($?)) -ne 0 ]] ; then
+        echo "> Files ["$1"] ["$2"] are not identical, exiting"
+        echo "${R}"
+        exit 1
+    fi
+}
+#   ------------------------------------------------------------------------------------------------
 #   build_pub__publish_c_cpp
 #
 #   suppress ERG modification marks

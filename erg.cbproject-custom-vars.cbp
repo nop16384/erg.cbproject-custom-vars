@@ -73,7 +73,7 @@
 				</ExtraCommands>
 			</Target>
 			<Environment>
-				<Variable name="CB_CVARS__CB_OBF_TRUNK_DIR" value="/home/erg/Src/C-C++/codeblocks/obfuscated.cb" />
+				<Variable name="CB_CVARS__CB_OBF_TRUNK_DIR" value="/home/erg/Src/C-C++/codeblocks/obfuscated.cb/Work" />
 				<Variable name="CB_CVARS__CB_SVN_TRUNK_DIR" value="/home/gwr/Src/C-C++/codeblocks/svn-ro/svn11914/trunk" />
 				<Variable name="CB_CVARS__CB_SVN_VERSION" value="11914" />
 				<Variable name="CB_CVARS__CB_USAGE_TRUNK_DIR" value="/home/gwr/Src/C-C++/codeblocks/svn-ro/svn11914/trunk" />

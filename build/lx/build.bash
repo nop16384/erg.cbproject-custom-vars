@@ -119,14 +119,16 @@ for (( i=0 ; i < $((FilesCard)) ; i+=1 )) ; do
     F="${Files[$((i))]}"
     D="${Dirs[$((i))]}"
 
+    AfRef="${AdCbProject}/src/ref/${F}"
     AfSrc="${AdCbProject}/src/${F}"
     AfPub="${AdPub}/${F}"
     AfXport="${AdXport}/${F}"
-    AfTrunk="${AdCbSvnTrunk}/${D}/${F}"
+    AfSvnTrunk="${AdCbSvnTrunk}/${D}/${F}"
+    AfObfTrunk="${AdCbObfTrunk}/${D}/${F}"
     FnPatch="erg.cb-cvars--patch--${F}"
 
     echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    echo "pub:doing ${F}..."
+    echo "doing ${F}..."
     echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
     case "${OptTarget}" in
@@ -138,12 +140,14 @@ for (( i=0 ; i < $((FilesCard)) ; i+=1 )) ; do
 
     "pub-svn")
     #echo "pub-svn"
+    #build_pub__verify_file_changes "${AfRef}" "${AfSvnTrunk}"
     build_pub__publish_file "${AfSrc}" "${AfPub}"
     build_pub_svn
     build_pub__apply_patch__add_var
     ;;
 
     "pub-obf")
+    #build_pub__verify_file_changes "${AfRef}" "${AfObfTrunk}"
     #echo "pub-obf"
     build_pub__publish_file "${AfSrc}" "${AfPub}"
     build_pub_obf
@@ -152,6 +156,8 @@ for (( i=0 ; i < $((FilesCard)) ; i+=1 )) ; do
 
     "pub-all")
     #echo "pub-all"
+    #build_pub__verify_file_changes "${AfRef}" "${AfSvnTrunk}"
+    #build_pub__verify_file_changes "${AfRef}" "${AfObfTrunk}"
     build_pub__publish_file "${AfSrc}" "${AfPub}"
     build_pub_svn
     build_pub_obf
